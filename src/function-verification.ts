@@ -1,7 +1,7 @@
 import {InvocationVerification} from "./invocation-verification";
 import {FunctionStubMetadata} from "./stubs/stub";
 
-export class FunctionVerification<TArgs extends Array<unknown>, TReturn> {
+export class FunctionVerification<const TArgs extends Array<unknown>, TReturn> {
     readonly #functionStubMetadata: FunctionStubMetadata<TArgs, TReturn>;
 
     constructor(functionStubMetadata: FunctionStubMetadata<TArgs, TReturn>) {

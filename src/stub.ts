@@ -1,7 +1,7 @@
 import {mock as mockSymbol, stub as stubSymbol} from "./symbols";
 import {Stub, Stubbable} from "./stubs/stub";
 
-export function stub<TObject extends object>(mockOrSpy: TObject & {
+export function stub<const TObject extends object>(mockOrSpy: TObject & {
     [mockSymbol]: { stubs: { -readonly [TKey in keyof TObject]?: Stub<TObject, TKey> } }
 }): Stubbable<TObject> {
     const stubs = mockOrSpy[mockSymbol].stubs;

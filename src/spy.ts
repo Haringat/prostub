@@ -2,7 +2,7 @@ import "./global";
 import {mock as mockSymbol, stub as stubSymbol} from "./symbols";
 import {Stub} from "./stubs/stub";
 
-export function spy<TObject extends object>(realObject: TObject): TObject & {
+export function spy<const TObject extends object>(realObject: TObject): TObject & {
     [mockSymbol]: { stubs: { -readonly [TKey in keyof TObject]?: Stub<TObject, TKey> } }
 } {
     const stubs = {} as { -readonly [TKey in keyof TObject]?: Stub<TObject, TKey> };

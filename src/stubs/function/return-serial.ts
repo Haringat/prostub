@@ -1,7 +1,7 @@
 import {FunctionStub, FunctionStubMetadata} from "../stub";
 import {stub} from "../../symbols";
 
-export function returnSerial<TObject extends object, TKey extends keyof TObject, TArgs extends Array<unknown>, TReturn>(...values: Array<TReturn>): FunctionStub<TObject, TKey, TArgs, TReturn> {
+export function returnSerial<const TObject extends object, const TKey extends keyof TObject, const TArgs extends Array<unknown>, const TReturn>(...values: Array<TReturn>): FunctionStub<TObject, TKey, TArgs, TReturn> {
     const metadata: FunctionStubMetadata<TArgs, TReturn> = {
         calls: []
     };

@@ -1,7 +1,7 @@
 import {FunctionStub, FunctionStubMetadata} from "../stub";
 import {stub} from "../../symbols";
 
-export function delegateTo<TObject extends object, TKey extends keyof TObject, TArgs extends Array<unknown>, TReturn>(
+export function delegateTo<const TObject extends object, const TKey extends keyof TObject, const TArgs extends Array<unknown>, const TReturn>(
     delegateFunction: (this: TObject, ...args: TArgs) => TReturn
 ): FunctionStub<TObject, TKey, TArgs, TReturn> {
     const metadata: FunctionStubMetadata<TArgs, TReturn> = {

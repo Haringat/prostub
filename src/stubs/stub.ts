@@ -21,9 +21,7 @@ export interface FunctionStub<TThis extends object, TKey extends keyof TThis, TA
     [stub]: {
         invoke: (thisArg: TThis, propertyName: TKey,  ...args: TArgs) => TReturn;
         type: "function",
-        metadata: {
-            calls: Array<InvocationRecord<TArgs, TReturn>>;
-        };
+        metadata: FunctionStubMetadata<TArgs, TReturn>;
     };
 }
 

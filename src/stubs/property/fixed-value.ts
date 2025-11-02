@@ -1,7 +1,7 @@
 import {stub} from "../../symbols";
 import {PropertyStub, PropertyStubMetadata} from "../stub";
 
-export function fixedValue<TThis extends object, TKey extends keyof TThis>(value: TThis[TKey]): PropertyStub<TThis, TKey> {
+export function fixedValue<const TThis extends object, const TKey extends keyof TThis>(value: TThis[TKey]): PropertyStub<TThis, TKey> {
     type TValue = TThis[TKey];
     const metadata: PropertyStubMetadata<TValue> = {
         reads: [],

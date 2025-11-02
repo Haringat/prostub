@@ -2,7 +2,7 @@ import {FunctionStub, FunctionStubMetadata} from "../stub";
 import {stub} from "../../symbols";
 import {runCatching} from "../../run-catching";
 
-export function answer<TObject extends object, TKey extends keyof TObject, TArgs extends Array<unknown>, TReturn>(
+export function answer<const TObject extends object, const TKey extends keyof TObject, const TArgs extends Array<unknown>, const TReturn>(
     answerFunction: (this: TObject, ...args: TArgs) => TReturn
 ): FunctionStub<TObject, TKey, TArgs, TReturn> {
     const metadata: FunctionStubMetadata<TArgs, TReturn> = {

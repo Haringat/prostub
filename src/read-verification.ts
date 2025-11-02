@@ -1,6 +1,6 @@
 import {ReadRecord} from "./stubs/stub";
 
-export class ReadVerification<TValue> {
+export class ReadVerification<const TValue> {
 
     readonly #readRecord: ReadRecord<TValue>;
 

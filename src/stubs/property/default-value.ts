@@ -1,7 +1,7 @@
 import {PropertyStub, PropertyStubMetadata} from "../stub";
 import {stub} from "../../symbols";
 
-export function defaultValue<TObject extends object, TKey extends keyof TObject>(value: TObject[TKey]): PropertyStub<TObject, TKey> {
+export function defaultValue<const TObject extends object, const TKey extends keyof TObject>(value: TObject[TKey]): PropertyStub<TObject, TKey> {
     type TValue = TObject[TKey];
     const metadata: PropertyStubMetadata<TValue> = {
         reads: [],

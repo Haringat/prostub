@@ -2,7 +2,7 @@ import {stub} from "../../symbols";
 import {FunctionStub, FunctionStubMetadata} from "../stub";
 import {runCatching} from "../../run-catching";
 
-export function callThrough<TObject extends object, TKey extends keyof TObject, TArgs extends Array<unknown>, TReturn>(): FunctionStub<TObject, TKey, TArgs, TReturn> {
+export function callThrough<const TObject extends object, const TKey extends keyof TObject, const TArgs extends Array<unknown>, const TReturn>(): FunctionStub<TObject, TKey, TArgs, TReturn> {
     const metadata: FunctionStubMetadata<TArgs, TReturn> = {
         calls: []
     };

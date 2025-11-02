@@ -1,6 +1,6 @@
 import {InvocationRecord} from "./stubs/stub";
 
-export class InvocationVerification<TArgs extends Array<unknown>, TReturn> {
+export class InvocationVerification<const TArgs extends Array<unknown>, TReturn> {
 
     readonly #call: InvocationRecord<TArgs, TReturn>;
 

@@ -2,7 +2,7 @@ import {AssignmentVerification} from "./assignment-verification";
 import {PropertyStubMetadata} from "./stubs/stub";
 import {ReadVerification} from "./read-verification";
 
-export class PropertyVerification<TValue> {
+export class PropertyVerification<const TValue> {
     readonly #propertyStubMetadata: PropertyStubMetadata<TValue>;
 
     constructor(propertyStubMetadata: PropertyStubMetadata<TValue>) {

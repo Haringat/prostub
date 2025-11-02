@@ -1,7 +1,7 @@
 import {stub} from "../../symbols";
 import {FunctionStub, FunctionStubMetadata} from "../stub";
 
-export function returnFixed<TObject extends object, TKey extends keyof TObject, TArgs extends Array<unknown>, TReturn>(
+export function returnFixed<const TObject extends object, const TKey extends keyof TObject, const TArgs extends Array<unknown>, const TReturn>(
     returnValue: TReturn
 ): FunctionStub<TObject, TKey, TArgs, TReturn> {
     const metadata: FunctionStubMetadata<TArgs, TReturn> = {

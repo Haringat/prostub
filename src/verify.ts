@@ -4,7 +4,7 @@ import {Verifiable} from "./verifiable";
 import {PropertyVerification} from "./property-verification";
 import {FunctionVerification} from "./function-verification";
 
-export function verify<TObject extends object>(mockOrSpy: TObject & {[mock]: {stubs: {-readonly [TKey in keyof TObject]?: Stub<TObject, TKey>}}}): Verifiable<TObject> {
+export function verify<const TObject extends object>(mockOrSpy: TObject & {[mock]: {stubs: {-readonly [TKey in keyof TObject]?: Stub<TObject, TKey>}}}): Verifiable<TObject> {
     return new Proxy({} as Verifiable<TObject>, {
         get<TKey extends PropertyKey>(_target: Verifiable<TObject>, propertyName: TKey, _receiver: unknown): any {
             if (!mockOrSpy[mock].stubs.hasOwnProperty(propertyName)) {

@@ -1,6 +1,6 @@
 import {AssignmentRecord} from "./stubs/stub";
 
-export class AssignmentVerification<TValue> {
+export class AssignmentVerification<const TValue> {
     readonly #assignmentRecord: AssignmentRecord<TValue>;
 
     constructor(assignmentRecord: AssignmentRecord<TValue>) {

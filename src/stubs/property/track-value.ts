@@ -1,7 +1,7 @@
 import {PropertyStub, PropertyStubMetadata} from "../stub";
 import {stub} from "../../symbols";
 
-export function trackValue<TObject extends object, TKey extends keyof TObject>(): PropertyStub<TObject, TKey> {
+export function trackValue<const TObject extends object, const TKey extends keyof TObject>(): PropertyStub<TObject, TKey> {
     type TValue = TObject[TKey];
     const metadata: PropertyStubMetadata<TValue> = {
         reads: [],

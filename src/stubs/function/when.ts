@@ -2,20 +2,17 @@ import {FunctionStub, FunctionStubMetadata} from "../stub";
 import {stub} from "../../symbols";
 import {ArgumentPredicate} from "../../argument-predicate";
 
-class OngoingFunctionStub<TThis extends object, TKey extends keyof TThis, TArgs extends Array<unknown>, TReturn> implements FunctionStub<TThis, TKey, TArgs, TReturn> {
-    get [stub]() {
-        const _this = this;
+class OngoingFunctionStub<const TThis extends object, const TKey extends keyof TThis, const TArgs extends Array<unknown>, const TReturn> implements FunctionStub<TThis, TKey, TArgs, TReturn> {
+    get [stub](): {invoke: (thisArg: TThis, propertyName: TKey, ...args: TArgs) => TReturn, type: "function", metadata: FunctionStubMetadata<TArgs, TReturn>} {
         return {
             invoke: (thisArg: TThis, propertyName: TKey, ...args: TArgs) => this.#invoke(thisArg, propertyName, ...args),
             type: "function" as const,
             metadata: {
-                get calls() {
-                    return [
-                        ...(_this.#parentStub ? _this.#parentStub[stub].metadata.calls : []),
-                        ..._this.#stub[stub].metadata.calls
-                    ]
-                }
-            } as FunctionStubMetadata<TArgs, TReturn>
+                calls: [
+                    ...(this.#parentStub ? this.#parentStub[stub].metadata.calls : []),
+                    ...this.#stub[stub].metadata.calls
+                ]
+            }
         };
     }
     readonly #argumentPredicates: ArgumentPredicate<TArgs>;
@@ -47,7 +44,7 @@ class OngoingFunctionStub<TThis extends object, TKey extends keyof TThis, TArgs 
     }
 }
 
-class OngoingFunctionStubBuilder<TThis extends object, TKey extends keyof TThis, TArgs extends Array<unknown>, TReturn> implements FunctionStub<TThis, TKey, TArgs, TReturn> {
+class OngoingFunctionStubBuilder<const TThis extends object, const TKey extends keyof TThis, const TArgs extends Array<unknown>, const TReturn> implements FunctionStub<TThis, TKey, TArgs, TReturn> {
     get [stub]() {
         return {
             invoke: (_thisArg: TThis, _propertyName: TKey, ..._args: TArgs) => {
@@ -73,6 +70,6 @@ class OngoingFunctionStubBuilder<TThis extends object, TKey extends keyof TThis,
     }
 }
 
-export function when<TObject extends object, TKey extends keyof TObject, TArgs extends Array<unknown>, TReturn>(...argumentPredicates: ArgumentPredicate<TArgs>): OngoingFunctionStubBuilder<TObject, TKey, TArgs, TReturn> {
+export function when<const TObject extends object, const TKey extends keyof TObject, const TArgs extends Array<unknown>, const TReturn>(...argumentPredicates: ArgumentPredicate<TArgs>): OngoingFunctionStubBuilder<TObject, TKey, TArgs, TReturn> {
     return new OngoingFunctionStubBuilder(argumentPredicates);
 }
