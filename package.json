@@ -1,27 +1,28 @@
 {
-  "name": "prostub",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "prepare": "rollup --config rollup.config.mjs",
-    "test": "npm run prepare && rollup --plugin 'typescript={tsconfig:\"./tsconfig.test.json\"}' test.ts | node"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "MIT",
-  "packageManager": "pnpm@10.20.0",
-  "devDependencies": {
-    "@rollup/plugin-commonjs": "^29.0.0",
-    "@rollup/plugin-json": "^6.1.0",
-    "@rollup/plugin-node-resolve": "^16.0.3",
-    "@rollup/plugin-typescript": "^12.3.0",
-    "@types/node": "^24.10.0",
-    "rollup": "^4.52.5",
-    "rollup-plugin-dts": "^6.2.3",
-    "typescript": "^5.9.3"
-  },
-  "dependencies": {
-    "tslib": "^2.8.1"
-  }
+    "name": "prostub",
+    "version": "1.1.1",
+    "description": "A TypeScript library for creating mocks.",
+    "type": "module",
+    "scripts": {
+        "prepare": "node build.mjs",
+        "test": "npm run prepare && rollup --plugin 'typescript={tsconfig:\"./tsconfig.test.json\"}' test.ts | node"
+    },
+    "keywords": [],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/haringat/prostub.git"
+    },
+    "author": "Haringat",
+    "license": "MIT",
+    "packageManager": "pnpm@10.20.0",
+    "devDependencies": {
+        "@rollup/plugin-typescript": "^12.3.0",
+        "@types/node": "^24.10.0",
+        "rollup": "^4.52.5",
+        "rollup-plugin-dts": "^6.2.3",
+        "typescript": "^5.9.3"
+    },
+    "dependencies": {
+        "tslib": "^2.8.1"
+    }
 }

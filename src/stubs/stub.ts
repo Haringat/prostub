@@ -1,4 +1,4 @@
-import {stub} from "../symbols";
+import {mock, stub} from "../symbols";
 
 export interface InvocationRecord<TArgs extends Array<unknown>, TReturn> {
     args: TArgs;
@@ -53,3 +53,7 @@ export type Stubbable<T extends object> = {
 export type Stub<TThis extends object, TKey extends keyof TThis> = TThis[TKey] extends (...args: infer TArgs) => infer TReturn
     ? FunctionStub<TThis, TKey, TArgs, TReturn>
     : PropertyStub<TThis, TKey>;
+
+export type Mock<T extends Object> = T & {
+    [mock]: {stubs: {-readonly [TKey in keyof T]?: Stub<T, TKey>}}
+}

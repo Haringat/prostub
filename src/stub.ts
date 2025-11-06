@@ -1,9 +1,7 @@
 import {mock as mockSymbol, stub as stubSymbol} from "./symbols";
-import {Stub, Stubbable} from "./stubs/stub";
+import {Mock, Stub, Stubbable} from "./stubs/stub";
 
-export function stub<const TObject extends object>(mockOrSpy: TObject & {
-    [mockSymbol]: { stubs: { -readonly [TKey in keyof TObject]?: Stub<TObject, TKey> } }
-}): Stubbable<TObject> {
+export function stub<const TObject extends object>(mockOrSpy: Mock<TObject>): Stubbable<TObject> {
     const stubs = mockOrSpy[mockSymbol].stubs;
     return new Proxy({} as Stubbable<TObject>, {
         set(_target: Stubbable<TObject>, propertyName: string | symbol, newValue: any, _receiver: unknown): boolean {

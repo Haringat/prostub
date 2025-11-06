@@ -1,4 +1,4 @@
-import {answer, callThrough, fixedValue, mock, stub, spy, verify, returnFixed, returnSerial, throwOnCall, when} from "./dist/index";
+import {Mock, answer, callThrough, fixedValue, mock, stub, spy, verify, returnFixed, returnSerial, throwOnCall, when} from "./dist/index";
 
 class Foo {
     x: string = "original x";
@@ -35,9 +35,9 @@ class Baz {
     }
 }
 
-const fooMock = mock(Foo);
-const barMock = spy(new Bar());
-const bazMock = spy(new Baz());
+const fooMock: Mock<Foo> = mock(Foo);
+const barMock: Mock<Bar> = spy(new Bar());
+const bazMock: Mock<Baz> = spy(new Baz());
 
 stub(fooMock).bar = returnFixed("mocked bar");
 stub(barMock).baz = callThrough();

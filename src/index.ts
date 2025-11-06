@@ -12,4 +12,5 @@ export {when} from "./stubs/function/when";
 export {defaultValue} from "./stubs/property/default-value";
 export {fixedValue} from "./stubs/property/fixed-value";
 export {trackValue} from "./stubs/property/track-value";
+export {Mock} from "./stubs/stub";
 export {verify} from "./verify";

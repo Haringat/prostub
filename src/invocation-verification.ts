@@ -1,4 +1,5 @@
 import {InvocationRecord} from "./stubs/stub";
+import {ArgumentPredicate} from "./argument-predicate";
 
 export class InvocationVerification<const TArgs extends Array<unknown>, TReturn> {
 
@@ -35,6 +36,19 @@ export class InvocationVerification<const TArgs extends Array<unknown>, TReturn>
         }
         if (!validator(this.#call.exception)) {
             throw new Error(`The thrown exception did not satisfy the provided validator.`);
+        }
+    }
+
+    didNotThrow(): void {
+        if (this.#call.exception) {
+            throw new Error(`Expected invocation to not throw an exception, but it threw: ${this.#call.exception}`);
+        }
+    }
+
+    hadArguments(...validators: ArgumentPredicate<TArgs>): void {
+        const hasArguments = validators.every((validator, index) => validator(this.#call.args[index]));
+        if (!hasArguments) {
+            throw new Error(`The invocation arguments did not satisfy the provided validators.`);
         }
     }
 
