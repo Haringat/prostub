@@ -10,5 +10,19 @@ The library is automatically built when running `pnpm install`, but it can be re
 
 ## Testing
 
-Right now there are no unit tests. However, there is a `test.ts`, which examplifies how the library is meant to be used. It can be executed by running `npm test`.
+The library includes a comprehensive test suite with 49 unit tests covering all major features and APIs. Tests are organized in spec files co-located with their source code:
+
+- `src/mock.spec.ts` - Core mock(), spy(), and stub() functionality
+- `src/stubs/function.spec.ts` - Function stub implementations
+- `src/stubs/property.spec.ts` - Property stub implementations
+- `src/verify.spec.ts` - Verification API
+- `src/integration.spec.ts` - Integration tests
+
+Run the tests using Node's built-in test runner:
+
+```bash
+npm test
+```
+
+All tests pass and are tracked in TAP v13 format.
 
