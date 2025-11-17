@@ -1,7 +1,12 @@
 {
     "extends": "./tsconfig.json",
     "compileOnSave": false,
+    "compilerOptions": {
+        "noUnusedParameters": false,
+        "noUnusedLocals": false
+    },
     "include": [
-        "./test.ts"
+        "./test.ts",
+        "./tests.ts"
     ]
 }

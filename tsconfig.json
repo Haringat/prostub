@@ -88,5 +88,8 @@
   },
   "include": [
     "./src/index.ts"
+  ],
+  "exclude": [
+    "**/*.spec.ts"
   ]
 }

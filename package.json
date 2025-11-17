@@ -5,7 +5,7 @@
     "type": "module",
     "scripts": {
         "prepare": "node build.mjs",
-        "test": "npm run prepare && rollup --plugin 'typescript={tsconfig:\"./tsconfig.test.json\"}' test.ts | node"
+        "test": "npm run prepare && node --test dist/**/*.spec.js"
     },
     "keywords": [],
     "repository": {

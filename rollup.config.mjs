@@ -28,5 +28,26 @@ export default [
         plugins: [
             dts()
         ]
+    },
+    {
+        input: [
+            "src/mock.spec.ts",
+            "src/stubs/function.spec.ts",
+            "src/stubs/property.spec.ts",
+            "src/verify.spec.ts",
+            "src/integration.spec.ts"
+        ],
+        output: [
+            {
+                dir: "dist",
+                format: "esm"
+            }
+        ],
+        plugins: [
+            rollupPluginTypescript({
+                tsconfig: "./tsconfig.spec.json",
+                noForceEmit: false
+            })
+        ]
     }
 ]
