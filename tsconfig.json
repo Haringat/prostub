@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "allowImportingTsExtensions": false,
     "allowJs": false,
     "allowSyntheticDefaultImports": true,
     "allowUmdGlobalAccess": false,
@@ -66,11 +67,10 @@
     "removeComments": false,
     "resolveJsonModule": true,
     "rootDir": ".",
-    "rootDirs": [],
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "sourceRoot": "src",
+    "sourceRoot": "./src",
     "strict": true,
     "strictBindCallApply": true,
     "strictFunctionTypes": true,
@@ -84,12 +84,13 @@
     "types": [
       "node"
     ],
-    "useDefineForClassFields": false
+    "useDefineForClassFields": false,
+    "verbatimModuleSyntax": true
   },
   "include": [
     "./src/index.ts"
   ],
   "exclude": [
-    "**/*.spec.ts"
+    "**/*.test.ts"
   ]
 }

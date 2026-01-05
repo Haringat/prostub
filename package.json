@@ -1,28 +1,43 @@
 {
-    "name": "prostub",
-    "version": "1.1.1",
-    "description": "A TypeScript library for creating mocks.",
-    "type": "module",
-    "scripts": {
-        "prepare": "node build.mjs",
-        "test": "npm run prepare && node --test dist/**/*.spec.js"
-    },
-    "keywords": [],
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/haringat/prostub.git"
-    },
-    "author": "Haringat",
-    "license": "MIT",
-    "packageManager": "pnpm@10.20.0",
-    "devDependencies": {
-        "@rollup/plugin-typescript": "^12.3.0",
-        "@types/node": "^24.10.0",
-        "rollup": "^4.52.5",
-        "rollup-plugin-dts": "^6.2.3",
-        "typescript": "^5.9.3"
-    },
-    "dependencies": {
-        "tslib": "^2.8.1"
-    }
+  "name": "prostub",
+  "version": "1.2.0",
+  "description": "A TypeScript library for creating mocks.",
+  "type": "module",
+  "scripts": {
+    "prepare": "npm run test && node build.mjs",
+    "test": "node --test --import ./loader/ts-loader.mjs 'src/**/*.test.ts'",
+    "test-coverage": "NODE_V8_COVERAGE=$(pwd)/coverage npm run test -- --experimental-test-coverage",
+    "download-previous-release": "rm -fr ./previous-version && mkdir -p ./previous-version && pushd ./previous-version && curl $(npm view prostub dist.tarball) | tar xz && mv package/* . && rmdir package && popd",
+    "compare-api": "npm run download-previous-release && change-detector ./previous-version/index.d.ts ./src/index.ts"
+  },
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/haringat/prostub.git"
+  },
+  "author": "Haringat",
+  "license": "MIT",
+  "packageManager": "pnpm@10.20.0",
+  "devDependencies": {
+    "@api-extractor-tools/change-detector": "^0.0.1",
+    "@eslint/compat": "^2.0.0",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^12.3.0",
+    "@types/node": "^24.10.4",
+    "@typescript-eslint/eslint-plugin": "^8.51.0",
+    "@typescript-eslint/parser": "^8.51.0",
+    "dprint": "^0.50.2",
+    "eslint": "^9.39.2",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsdoc": "^61.5.0",
+    "eslint-plugin-tsdoc": "^0.5.0",
+    "eslint-plugin-unicorn": "^62.0.0",
+    "globals": "^16.5.0",
+    "rollup": "^4.54.0",
+    "rollup-plugin-dts": "^6.3.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "tslib": "^2.8.1"
+  }
 }

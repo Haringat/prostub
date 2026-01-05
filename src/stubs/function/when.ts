@@ -1,30 +1,69 @@
-import {FunctionStub, FunctionStubMetadata} from "../stub";
-import {stub} from "../../symbols";
-import {ArgumentPredicate} from "../../argument-predicate";
+import type { ArgumentPredicate } from "../../argument-predicate";
+import { stub } from "../../symbols";
+import type { FunctionStub, FunctionStubMetadata } from "../stub";
 
-class OngoingFunctionStub<const TThis extends object, const TKey extends keyof TThis, const TArgs extends Array<unknown>, const TReturn> implements FunctionStub<TThis, TKey, TArgs, TReturn> {
-    get [stub](): {invoke: (thisArg: TThis, propertyName: TKey, ...args: TArgs) => TReturn, type: "function", metadata: FunctionStubMetadata<TArgs, TReturn>} {
+/**
+ * Ongoing function stub that matches specific argument predicates.
+ * It allows chaining multiple stubs with different argument matching criteria.
+ * @typeParam TThis - The type of the object containing the function.
+ * @typeParam TKey - The key of the function within the object.
+ * @typeParam TArgs - The types of the arguments the function accepts.
+ * @typeParam TReturn - The return type of the function.
+ */
+class OngoingFunctionStub<
+    const TThis extends object,
+    const TKey extends keyof TThis,
+    const TArgs extends Array<unknown>,
+    const TReturn
+> implements FunctionStub<TThis, TKey, TArgs, TReturn> {
+    get [stub](): {
+        invoke: (thisArg: TThis, propertyName: TKey, ...args: TArgs) => TReturn;
+        type: "function";
+        metadata: FunctionStubMetadata<TArgs, TReturn>;
+    } {
         return {
-            invoke: (thisArg: TThis, propertyName: TKey, ...args: TArgs) => this.#invoke(thisArg, propertyName, ...args),
+            invoke: (thisArg: TThis, propertyName: TKey, ...args: TArgs) =>
+                this.#invoke(thisArg, propertyName, ...args),
             type: "function" as const,
             metadata: {
                 calls: [
-                    ...(this.#parentStub ? this.#parentStub[stub].metadata.calls : []),
-                    ...this.#stub[stub].metadata.calls
+                    ...(this.#parentStub ?
+                        this.#parentStub[stub].metadata.calls :
+                        []),
+                    ...this
+                        .#stub[stub]
+                        .metadata
+                        .calls
                 ]
             }
         };
     }
+
     readonly #argumentPredicates: ArgumentPredicate<TArgs>;
     readonly #stub: FunctionStub<TThis, TKey, TArgs, TReturn>;
+
     readonly #parentStub?: OngoingFunctionStub<TThis, TKey, TArgs, TReturn>;
 
-    constructor(argumentPredicates: ArgumentPredicate<TArgs>, stub: FunctionStub<TThis, TKey, TArgs, TReturn>, parentStub?: OngoingFunctionStub<TThis, TKey, TArgs, TReturn>) {
+    constructor(
+        argumentPredicates: ArgumentPredicate<TArgs>,
+        functionStub: FunctionStub<TThis, TKey, TArgs, TReturn>,
+        parentStub?: OngoingFunctionStub<TThis, TKey, TArgs, TReturn>
+    ) {
         this.#argumentPredicates = argumentPredicates;
-        this.#stub = stub;
+        this.#stub = functionStub;
         this.#parentStub = parentStub;
     }
 
+    /**
+     * Begins the definition of an additional function stub that matches specific argument predicates.
+     * Use the returned builder to complete the stub definition with the `then` method.
+     * @returns An ongoing function stub builder for defining the stub behavior.
+     * @typeParam TThis - The type of the object containing the function.
+     * @typeParam TKey - The key of the function within the object.
+     * @typeParam TArgs - The types of the arguments the function accepts.
+     * @typeParam TReturn - The return type of the function.
+     * @param argumentPredicates - The predicates to match the function arguments.
+     */
     when(...argumentPredicates: ArgumentPredicate<TArgs>): OngoingFunctionStubBuilder<TThis, TKey, TArgs, TReturn> {
         return new OngoingFunctionStubBuilder(argumentPredicates, this);
     }
@@ -44,32 +83,85 @@ class OngoingFunctionStub<const TThis extends object, const TKey extends keyof T
     }
 }
 
-class OngoingFunctionStubBuilder<const TThis extends object, const TKey extends keyof TThis, const TArgs extends Array<unknown>, const TReturn> implements FunctionStub<TThis, TKey, TArgs, TReturn> {
+/**
+ * Builder for defining ongoing function stubs with argument matching.
+ * Use the `then` method to complete the stub definition.
+ * @typeParam TThis - The type of the object containing the function.
+ * @typeParam TKey - The key of the function within the object.
+ * @typeParam TArgs - The types of the arguments the function accepts.
+ * @typeParam TReturn - The return type of the function.
+ */
+class OngoingFunctionStubBuilder<
+    const TThis extends object,
+    const TKey extends keyof TThis,
+    const TArgs extends Array<unknown>,
+    const TReturn
+> implements FunctionStub<TThis, TKey, TArgs, TReturn> {
     get [stub]() {
         return {
             invoke: (_thisArg: TThis, _propertyName: TKey, ..._args: TArgs) => {
-                throw new Error("Cannot invoke a stub builder. Please complete the stub definition using 'then' before invoking.");
+                throw new Error(
+                    "Cannot invoke a stub builder. Please complete the stub definition using 'then' before invoking."
+                );
             },
             type: "function" as const,
-            metadata: {
-                calls: []
-            }
+            metadata: { calls: [] }
         };
     }
 
     readonly #argumentPredicates: ArgumentPredicate<TArgs>;
     readonly #parentStub?: OngoingFunctionStub<TThis, TKey, TArgs, TReturn>;
 
-    constructor(argumentPredicates: ArgumentPredicate<TArgs>, parentStub?: OngoingFunctionStub<TThis, TKey, TArgs, TReturn>) {
+    constructor(
+        argumentPredicates: ArgumentPredicate<TArgs>,
+        parentStub?: OngoingFunctionStub<TThis, TKey, TArgs, TReturn>
+    ) {
         this.#argumentPredicates = argumentPredicates;
         this.#parentStub = parentStub;
     }
 
-    then(stub: FunctionStub<TThis, TKey, TArgs, TReturn>): OngoingFunctionStub<TThis, TKey, TArgs, TReturn> {
-        return new OngoingFunctionStub(this.#argumentPredicates, stub, this.#parentStub);
+    /**
+     * Completes the stub definition by specifying the function stub to use when the argument predicates match.
+     * @returns An ongoing function stub that can be further extended with additional argument matching.
+     * @typeParam TThis - The type of the object containing the function.
+     * @typeParam TKey - The key of the function within the object.
+     * @typeParam TArgs - The types of the arguments the function accepts.
+     * @typeParam TReturn - The return type of the function.
+     * @param nextStub - The function stub to use when the argument predicates match.
+     */
+    then(nextStub: FunctionStub<TThis, TKey, TArgs, TReturn>): OngoingFunctionStub<TThis, TKey, TArgs, TReturn> {
+        return new OngoingFunctionStub(this.#argumentPredicates, nextStub, this.#parentStub);
     }
 }
 
-export function when<const TObject extends object, const TKey extends keyof TObject, const TArgs extends Array<unknown>, const TReturn>(...argumentPredicates: ArgumentPredicate<TArgs>): OngoingFunctionStubBuilder<TObject, TKey, TArgs, TReturn> {
+/**
+ * Begins the definition of a function stub that matches specific argument predicates.
+ * Use the returned builder to complete the stub definition with the `then` method.
+ * @typeParam TObject - The type of the object containing the function.
+ * @typeParam TKey - The key of the function within the object.
+ * @typeParam TArgs - The types of the arguments the function accepts.
+ * @typeParam TReturn - The return type of the function.
+ * @returns An ongoing function stub builder for defining the stub behavior.
+ * @example
+ * ```ts
+ * stub(myStubbedObject).someMethod = when(
+ *     arg1 => arg1 > 0,
+ *     arg2 => arg2 === "test"
+ * )
+ * .then(returnValue(42))
+ * .when(
+ *     arg1 => arg1 <= 0,
+ *     arg2 => arg2 === "test"
+ * )
+ * .then(throwError(new Error("arg1 must be positive")));
+ * ```
+ * @param argumentPredicates - The predicates to match the function arguments.
+ */
+export function when<
+    const TObject extends object,
+    const TKey extends keyof TObject,
+    const TArgs extends Array<unknown>,
+    const TReturn
+>(...argumentPredicates: ArgumentPredicate<TArgs>): OngoingFunctionStubBuilder<TObject, TKey, TArgs, TReturn> {
     return new OngoingFunctionStubBuilder(argumentPredicates);
 }
