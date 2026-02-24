@@ -1,5 +1,5 @@
-import { stub } from "../../symbols";
-import type { FunctionStub, FunctionStubMetadata } from "../stub";
+import { stub } from "../../symbols.js";
+import type { FunctionStub, FunctionStubMetadata } from "../stub.js";
 
 /**
  * Creates a function stub that returns a series of specified values in order when invoked.
@@ -35,7 +35,11 @@ export function returnSerial<
                             index + 1
                         } times, but only ${values.length} values were provided)`
                     );
-                    metadata.calls.push({ args, time: BigInt(Math.floor(performance.now() * 1000000)), exception: error });
+                    metadata.calls.push({
+                        args,
+                        time: BigInt(Math.floor(performance.now() * 1000000)),
+                        exception: error
+                    });
                     throw error;
                 }
                 const returnValue = values[index] as TReturn;

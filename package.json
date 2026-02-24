@@ -1,13 +1,13 @@
 {
   "name": "prostub",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "A TypeScript library for creating mocks.",
   "type": "module",
   "scripts": {
     "prepare": "npm run test && node build.mjs",
     "test": "node --test --import ./loader/ts-loader.mjs 'src/**/*.test.ts'",
     "test-coverage": "NODE_V8_COVERAGE=$(pwd)/coverage npm run test -- --experimental-test-coverage",
-    "download-previous-release": "rm -fr ./previous-version && mkdir -p ./previous-version && pushd ./previous-version && curl $(npm view prostub dist.tarball) | tar xz && mv package/* . && rmdir package && popd",
+    "download-previous-release": "rm -fr ./previous-version && mkdir -p ./previous-version && curl $(npm view prostub dist.tarball) | tar xz -C ./previous-version --strip-components=1",
     "compare-api": "npm run download-previous-release && change-detector ./previous-version/index.d.ts ./src/index.ts"
   },
   "keywords": [],
@@ -21,7 +21,6 @@
   "devDependencies": {
     "@api-extractor-tools/change-detector": "^0.0.1",
     "@eslint/compat": "^2.0.0",
-    "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.3.0",
     "@types/node": "^24.10.4",
     "@typescript-eslint/eslint-plugin": "^8.51.0",
@@ -35,9 +34,8 @@
     "globals": "^16.5.0",
     "rollup": "^4.54.0",
     "rollup-plugin-dts": "^6.3.0",
-    "typescript": "^5.9.3"
-  },
-  "dependencies": {
-    "tslib": "^2.8.1"
+    "tslib": "^2.8.1",
+    "typescript": "^6.0.0-dev.20260224",
+    "terser": "^5.46.0"
   }
 }

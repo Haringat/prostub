@@ -1,5 +1,5 @@
-import { stub } from "../../symbols";
-import type { FunctionStub, FunctionStubMetadata } from "../stub";
+import { stub } from "../../symbols.js";
+import type { FunctionStub, FunctionStubMetadata } from "../stub.js";
 
 /**
  * Creates a no-operation function stub that records each invocation's arguments and timestamps.

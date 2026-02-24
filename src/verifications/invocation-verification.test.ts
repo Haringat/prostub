@@ -1,5 +1,5 @@
 import { suite, test, type TestContext } from "node:test";
-import { InvocationVerification } from "./invocation-verification";
+import { InvocationVerification } from "./invocation-verification.js";
 
 await suite("InvocationVerification", async () => {
     await suite("returned", async () => {
@@ -42,11 +42,7 @@ await suite("InvocationVerification", async () => {
             t.plan(1);
 
             // Given
-            const invocationVerification = new InvocationVerification({
-                args: [],
-                time: 0n,
-                returnValue: "actual"
-            });
+            const invocationVerification = new InvocationVerification({ args: [], time: 0n, returnValue: "actual" });
 
             // Then
             t.assert.throws(() => {
@@ -95,10 +91,7 @@ await suite("InvocationVerification", async () => {
             t.plan(1);
 
             // When
-            const invocationVerification = new InvocationVerification({
-                args: [],
-                time: 0n
-            });
+            const invocationVerification = new InvocationVerification({ args: [], time: 0n });
 
             // Then
             t.assert.doesNotThrow(() => {

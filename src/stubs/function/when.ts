@@ -1,6 +1,6 @@
-import type { ArgumentPredicate } from "../../argument-predicate";
-import { stub } from "../../symbols";
-import type { FunctionStub, FunctionStubMetadata } from "../stub";
+import type { ArgumentPredicate } from "../../argument-predicate.js";
+import { stub } from "../../symbols.js";
+import type { FunctionStub, FunctionStubMetadata } from "../stub.js";
 
 /**
  * Ongoing function stub that matches specific argument predicates.

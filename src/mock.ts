@@ -1,7 +1,7 @@
-import { spy } from "./spy";
-import type { Mock } from "./stubs/stub";
-import type { Type } from "./type";
-import type { stub } from "./stub";
+import { spy } from "./spy.js";
+import type { stub } from "./stub.js";
+import type { Mock } from "./stubs/stub.js";
+import type { Type } from "./type.js";
 
 /**
  * Creates a mock instance of the given class.

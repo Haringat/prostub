@@ -1,6 +1,6 @@
-import type { ArgumentPredicate } from "../argument-predicate";
-import type { InvocationRecord } from "../stubs/stub";
-import { InteractionVerification } from "./interaction-verification";
+import type { ArgumentPredicate } from "../argument-predicate.js";
+import type { InvocationRecord } from "../stubs/stub.js";
+import { InteractionVerification } from "./interaction-verification.js";
 
 export class InvocationVerification<const TArgs extends Array<unknown>, TReturn>
     extends InteractionVerification<InvocationRecord<TArgs, TReturn>> {

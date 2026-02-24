@@ -1,5 +1,5 @@
-import { stub } from "../../symbols";
-import type { FunctionStub, FunctionStubMetadata } from "../stub";
+import { stub } from "../../symbols.js";
+import type { FunctionStub, FunctionStubMetadata } from "../stub.js";
 
 /**
  * Creates a function stub that throws an error when invoked.

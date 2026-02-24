@@ -5,12 +5,13 @@
 A mocking/stubbing library for JavaScript, inspired by Mockito. It is evironment-agnostic. The production code at run-time only relies on the JavaScript standard library and tslib. The test code relies on Node.js for running the tests, but the library itself can be used in any JavaScript environment (Node.js, browsers, Deno, etc.).
 
 ## Features
+
 - Create mock and spy objects for classes and interfaces
 - Stub methods and properties with various behaviors
 - Verify interactions with mock objects
 - Type-safe API with TypeScript support
 - Lightweight and easy to use
-- Low bundle size (~2.2KB minified + gzipped)
+- Low bundle size (~2.4KB minified + gzipped)
 - Small API surface (only 15 API symbols)
 
 It consists of 3 separate DSLs:
@@ -88,7 +89,7 @@ The `verify()` function allows you to assert that certain interactions occurred 
 For example:
 
 ```typescript
-import { mock, verify, returnFixed } from "prostub";
+import { mock, returnFixed, verify } from "prostub";
 class Example {
     method(): string {
         return this.property;
@@ -100,7 +101,11 @@ const mockedExample = mock(Example);
 
 stub(mockedExample).method = returnFixed("stubbed result");
 
-verify(mockedExample).method.firstInvocation().returned(it => it === "stubbed result"); // Passes
+mockedExample.method(); // Returns "stubbed result"
+
+verify(mockedExample).method.firstInvocation().returned(it =>
+    it === "stubbed result"
+); // Passes
 verify(mockedExample).property.wasNotRead(); // Passes
 ```
 
@@ -113,7 +118,7 @@ The library is automatically built when running `pnpm install`, but it can be re
 The library is fully tested using Node.js. Tests are executed as part of the building process, run inside the prepare hook, so when install the dependencies:
 
 ```bash
-npm install
+pnpm install
 ```
 
 The tests will be run automatically. To run the tests manually, simply run:

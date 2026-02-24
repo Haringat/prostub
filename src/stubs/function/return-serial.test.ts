@@ -1,6 +1,6 @@
 import { suite, test, type TestContext } from "node:test";
-import { stub } from "../../symbols";
-import { returnSerial } from "./return-serial";
+import { stub } from "../../symbols.js";
+import { returnSerial } from "./return-serial.js";
 
 await suite("returnSerial", async () => {
     await test("should return values in sequence", (t: TestContext) => {

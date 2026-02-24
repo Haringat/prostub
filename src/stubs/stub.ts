@@ -1,4 +1,4 @@
-import { mock, stub } from "../symbols";
+import { mock, stub } from "../symbols.js";
 
 export interface InteractionRecord {
     time: bigint;

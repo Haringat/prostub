@@ -1,6 +1,6 @@
 import { suite, test, type TestContext } from "node:test";
-import { mock } from "./mock";
-import { mock as mockSymbol } from "./symbols";
+import { mock } from "./mock.js";
+import { mock as mockSymbol } from "./symbols.js";
 
 await suite("mock", async () => {
     class TestClass {

@@ -1,6 +1,6 @@
 import { suite, test, type TestContext } from "node:test";
-import { stub } from "../../symbols";
-import { noop } from "./noop";
+import { stub } from "../../symbols.js";
+import { noop } from "./noop.js";
 
 await suite("noop", async () => {
     await test("should return undefined", (t: TestContext) => {

@@ -1,6 +1,6 @@
 import { suite, test, type TestContext } from "node:test";
-import { spy } from "./spy";
-import { mock } from "./symbols";
+import { spy } from "./spy.js";
+import { mock } from "./symbols.js";
 
 await suite("spy", async () => {
     await test("should pass instanceof checks", (t: TestContext) => {

@@ -1,7 +1,7 @@
-import type { Mock, Stub, Stubbable } from "./stubs/stub";
-import { mock as mockSymbol, stub as stubSymbol } from "./symbols";
-import { mock } from "./mock";
-import { spy } from "./spy";
+import { mock } from "./mock.js";
+import { spy } from "./spy.js";
+import type { Mock, Stub, Stubbable } from "./stubs/stub.js";
+import { mock as mockSymbol, stub as stubSymbol } from "./symbols.js";
 
 /**
  * Creates a {@link Stubbable} for the given mock or spy. The returned object allows you to define stubs for methods and properties on the mock or spy.

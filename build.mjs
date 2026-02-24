@@ -20,7 +20,14 @@ async function writePackageJson() {
                             ["name", "version", "description", "license", "author", "repository", "type"].includes(key)
                         )
                 ),
-                peerDependencies: { ...(packageJson.dependencies ?? {}), ...(packageJson.peerDependencies ?? {}) },
+                peerDependencies: {
+                    ...Object.fromEntries(
+                        Object
+                            .entries(packageJson.dependencies ?? {})
+                            .filter(([name]) => name !== "tslib")
+                    ),
+                    ...(packageJson.peerDependencies ?? {})
+                },
                 main: "index.js",
                 types: "index.d.ts",
                 scripts: {
@@ -72,7 +79,11 @@ function build() {
 
 function detectVersionType() {
     return new Promise((resolve, reject) => {
-        const compareApi = execFile("./node_modules/.bin/change-detector", ["./previous-version/index.d.ts", "./src/index.ts", "--json"], { cwd: import.meta.dirname })
+        const compareApi = execFile("./node_modules/.bin/change-detector", [
+            "./previous-version/index.d.ts",
+            "./src/index.ts",
+            "--json"
+        ], { cwd: import.meta.dirname })
             .on("exit", code => {
                 if (code !== 0) {
                     reject(new Error(`compare-api process exited with code ${code}`));
@@ -80,12 +91,24 @@ function detectVersionType() {
             });
         compareApi.stderr.pipe(process.stderr);
         compareApi.stdout.toArray().then(it => resolve(JSON.parse(it.join("")).releaseType)).catch(reject);
-    })
+    });
+}
+
+async function bundleSize() {
+    const terser = execFile("npx", ["terser", "dist/index.js", "--compress", "--mangle"], { cwd: import.meta.dirname, encoding: "buffer" });
+    terser.stderr.pipe(process.stderr);
+    const gzip = execFile("gzip", ["-9"], { cwd: import.meta.dirname, encoding: "buffer" });
+    gzip.stderr.pipe(process.stderr);
+    terser.stdout.pipe(gzip.stdin);
+    const output = await gzip.stdout.toArray();
+    return Buffer.concat(output).length;
 }
 
 await mkdir(join(import.meta.dirname, "dist"), { recursive: true });
 
 await Promise.all([writePackageJson(), writeReadme(), writeLicense(), build()]);
+
+console.log(`Bundle size (gzip): ${await bundleSize()} bytes`);
 
 const versionType = await detectVersionType();
 console.log(`Recommended Version bump: ${versionType}`);

@@ -1,15 +1,12 @@
 import { suite, test, todo } from "node:test";
-import { PropertyVerification } from "./property-verification";
+import { PropertyVerification } from "./property-verification.js";
 
 await suite("PropertyVerification", async () => {
     await suite("wasReadNTimes", async () => {
         await test("should not throw if the property was read the expected number of times", t => {
             t.plan(1);
 
-            const propertyVerification = new PropertyVerification({
-                assignments: [],
-                reads: [{ time: 0n, value: 0 }]
-            });
+            const propertyVerification = new PropertyVerification({ assignments: [], reads: [{ time: 0n, value: 0 }] });
 
             t.assert.doesNotThrow(() => {
                 propertyVerification.wasReadNTimes(1);
@@ -64,10 +61,7 @@ await suite("PropertyVerification", async () => {
 
                 const propertyVerification = new PropertyVerification({
                     assignments: [],
-                    reads: [{ time: 0n, value: 0 }, {
-                        time: 0n,
-                        value: 0
-                    }]
+                    reads: [{ time: 0n, value: 0 }, { time: 0n, value: 0 }]
                 });
 
                 t.assert.doesNotThrow(() => {
@@ -79,10 +73,7 @@ await suite("PropertyVerification", async () => {
 
                 const propertyVerification = new PropertyVerification({
                     assignments: [],
-                    reads: [{ time: 0n, value: 0 }, {
-                        time: 0n,
-                        value: 0
-                    }]
+                    reads: [{ time: 0n, value: 0 }, { time: 0n, value: 0 }]
                 });
 
                 t.assert.throws(() => {

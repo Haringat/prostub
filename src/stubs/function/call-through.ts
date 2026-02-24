@@ -1,6 +1,6 @@
-import { runCatching } from "../../run-catching";
-import { stub } from "../../symbols";
-import type { FunctionStub, FunctionStubMetadata } from "../stub";
+import { runCatching } from "../../run-catching.js";
+import { stub } from "../../symbols.js";
+import type { FunctionStub, FunctionStubMetadata } from "../stub.js";
 
 /**
  * Creates a function stub that calls through to the original implementation of the function when invoked.

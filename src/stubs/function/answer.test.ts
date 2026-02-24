@@ -1,6 +1,6 @@
 import { suite, test, type TestContext } from "node:test";
-import { stub } from "../../symbols";
-import { answer } from "./answer";
+import { stub } from "../../symbols.js";
+import { answer } from "./answer.js";
 
 await suite("answer", async () => {
     await test("should pass through and record arguments", (t: TestContext) => {

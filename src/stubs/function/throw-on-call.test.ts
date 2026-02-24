@@ -1,6 +1,6 @@
 import { suite, test, type TestContext } from "node:test";
-import { stub } from "../../symbols";
-import { throwOnCall } from "./throw-on-call";
+import { stub } from "../../symbols.js";
+import { throwOnCall } from "./throw-on-call.js";
 
 await suite("throwOnCall", async () => {
     await test("should throw an error on invocation", (t: TestContext) => {

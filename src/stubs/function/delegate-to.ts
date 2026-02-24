@@ -1,5 +1,5 @@
-import { stub } from "../../symbols";
-import type { FunctionStub, FunctionStubMetadata } from "../stub";
+import { stub } from "../../symbols.js";
+import type { FunctionStub, FunctionStubMetadata } from "../stub.js";
 
 /**
  * Creates a function stub that delegates its implementation to the provided delegate function.
@@ -27,7 +27,11 @@ export function delegateTo<
     return {
         [stub]: {
             invoke: function(thisArg, _propertyName, ...args) {
-                metadata.calls.push({ args, returnValue: delegateFunction.apply(thisArg, args), time: BigInt(Math.floor(performance.now() * 1000000)) });
+                metadata.calls.push({
+                    args,
+                    returnValue: delegateFunction.apply(thisArg, args),
+                    time: BigInt(Math.floor(performance.now() * 1000000))
+                });
                 return delegateFunction.apply(thisArg, args);
             },
             type: "function",

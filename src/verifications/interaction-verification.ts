@@ -1,4 +1,4 @@
-import type {InteractionRecord} from "../stubs/stub";
+import type { InteractionRecord } from "../stubs/stub.js";
 
 /**
  * Abstract base class for verifying interactions.

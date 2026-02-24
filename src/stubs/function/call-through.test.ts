@@ -1,6 +1,6 @@
 import { suite, test, type TestContext } from "node:test";
-import { stub } from "../../symbols";
-import { callThrough } from "./call-through";
+import { stub } from "../../symbols.js";
+import { callThrough } from "./call-through.js";
 
 await suite("callThrough", async () => {
     await test("should invoke the real method on the object", (t: TestContext) => {

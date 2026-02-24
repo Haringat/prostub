@@ -1,6 +1,6 @@
-import {suite, test, type TestContext} from "node:test";
-import {FunctionVerification} from "./function-verification";
-import {InvocationVerification} from "./invocation-verification";
+import { suite, test, type TestContext } from "node:test";
+import { FunctionVerification } from "./function-verification.js";
+import { InvocationVerification } from "./invocation-verification.js";
 
 await suite("FunctionVerification", async () => {
     await suite("wasCalled", async () => {
@@ -9,7 +9,7 @@ await suite("FunctionVerification", async () => {
                 t.plan(1);
                 // Given
                 const verification = new FunctionVerification({
-                    calls: [ { args: [], returnValue: undefined, time: BigInt(Math.floor(performance.now() * 1000000)) } ]
+                    calls: [{ args: [], returnValue: undefined, time: BigInt(Math.floor(performance.now() * 1000000)) }]
                 });
 
                 // Then
@@ -22,9 +22,7 @@ await suite("FunctionVerification", async () => {
             await test("should throw when method was not called", (t: TestContext) => {
                 t.plan(1);
                 // Given
-                const verification = new FunctionVerification({
-                    calls: []
-                });
+                const verification = new FunctionVerification({ calls: [] });
 
                 // Then
                 t.assert.throws(() => verification.wasCalled(), {
@@ -39,7 +37,11 @@ await suite("FunctionVerification", async () => {
                 const verification = new FunctionVerification({
                     calls: [
                         { args: [], returnValue: undefined, time: BigInt(Math.floor(performance.now() * 1000000)) },
-                        { args: [], returnValue: undefined, time: BigInt(Math.floor(performance.now() * 1000000)) }
+                        {
+                            args: [],
+                            returnValue: undefined,
+                            time: BigInt(Math.floor(performance.now() * 1000000))
+                        }
                     ]
                 });
 
@@ -56,7 +58,11 @@ await suite("FunctionVerification", async () => {
                 const verification = new FunctionVerification({
                     calls: [
                         { args: [], returnValue: undefined, time: BigInt(Math.floor(performance.now() * 1000000)) },
-                        { args: [], returnValue: undefined, time: BigInt(Math.floor(performance.now() * 1000000)) }
+                        {
+                            args: [],
+                            returnValue: undefined,
+                            time: BigInt(Math.floor(performance.now() * 1000000))
+                        }
                     ]
                 });
 
@@ -64,9 +70,7 @@ await suite("FunctionVerification", async () => {
                 t.assert.throws(() => {
                     // When
                     verification.wasCalled(it => it === 1);
-                }, {
-                    message: /Expected invocation count to pass predicate. \(was called 2 times\)/
-                });
+                }, { message: /Expected invocation count to pass predicate. \(was called 2 times\)/ });
             });
         });
     });
@@ -75,23 +79,19 @@ await suite("FunctionVerification", async () => {
             t.plan(1);
             // Given
             const verification = new FunctionVerification({
-                calls: [ { args: [], returnValue: undefined, time: BigInt(Math.floor(performance.now() * 1000000)) } ]
+                calls: [{ args: [], returnValue: undefined, time: BigInt(Math.floor(performance.now() * 1000000)) }]
             });
 
             // Then
             t.assert.throws(() => {
                 // When
                 verification.wasNotCalled();
-            }, {
-                message: /Expected invocation count to pass predicate. \(was called 1 times\)/
-            });
+            }, { message: /Expected invocation count to pass predicate. \(was called 1 times\)/ });
         });
         await test("should not throw if the function was never called", async (t: TestContext) => {
             t.plan(1);
             // Given
-            const verification = new FunctionVerification({
-                calls: []
-            });
+            const verification = new FunctionVerification({ calls: [] });
 
             // Then
             t.assert.doesNotThrow(() => {
@@ -105,10 +105,11 @@ await suite("FunctionVerification", async () => {
             t.plan(1);
             // Given
             const verification = new FunctionVerification({
-                calls: [
-                    { args: [], returnValue: undefined, time: BigInt(Math.floor(performance.now() * 1000000)) },
-                    { args: [], returnValue: undefined, time: BigInt(Math.floor(performance.now() * 1000000)) }
-                ]
+                calls: [{ args: [], returnValue: undefined, time: BigInt(Math.floor(performance.now() * 1000000)) }, {
+                    args: [],
+                    returnValue: undefined,
+                    time: BigInt(Math.floor(performance.now() * 1000000))
+                }]
             });
 
             // Then
@@ -121,19 +122,18 @@ await suite("FunctionVerification", async () => {
             t.plan(1);
             // Given
             const verification = new FunctionVerification({
-                calls: [
-                    { args: [], returnValue: undefined, time: BigInt(Math.floor(performance.now() * 1000000)) },
-                    { args: [], returnValue: undefined, time: BigInt(Math.floor(performance.now() * 1000000)) }
-                ]
+                calls: [{ args: [], returnValue: undefined, time: BigInt(Math.floor(performance.now() * 1000000)) }, {
+                    args: [],
+                    returnValue: undefined,
+                    time: BigInt(Math.floor(performance.now() * 1000000))
+                }]
             });
 
             // Then
             t.assert.throws(() => {
                 // When
                 verification.wasCalledTimes(1);
-            }, {
-                message: /Expected invocation count to pass predicate. \(was called 2 times\)/
-            });
+            }, { message: /Expected invocation count to pass predicate. \(was called 2 times\)/ });
         });
     });
     await suite("nthInvocation", async () => {
@@ -141,36 +141,28 @@ await suite("FunctionVerification", async () => {
             t.plan(1);
             // Given
             const verification = new FunctionVerification({
-                calls: [
-                    { args: [1], returnValue: 2, time: 1000n },
-                    { args: [3], returnValue: 4, time: 2000n }
-                ]
+                calls: [{ args: [1], returnValue: 2, time: 1000n }, { args: [3], returnValue: 4, time: 2000n }]
             });
 
             // When
             const invocationVerification = verification.nthInvocation(1);
 
             // Then
-            t.assert.deepStrictEqual(invocationVerification, new InvocationVerification({
-                args: [3], returnValue: 4, time: 2000n
-            }));
+            t.assert.deepStrictEqual(
+                invocationVerification,
+                new InvocationVerification({ args: [3], returnValue: 4, time: 2000n })
+            );
         });
         await test("should throw if there were fewer invocations than the given index", async (t: TestContext) => {
             t.plan(1);
             // Given
-            const verification = new FunctionVerification({
-                calls: [
-                    { args: [1], returnValue: 2, time: 0n }
-                ]
-            });
+            const verification = new FunctionVerification({ calls: [{ args: [1], returnValue: 2, time: 0n }] });
 
             // Then
             t.assert.throws(() => {
                 // When
                 verification.nthInvocation(1);
-            }, {
-                message: /Invocation index 1 is out of bounds. There are only 1 invocations./
-            });
+            }, { message: /Invocation index 1 is out of bounds. There are only 1 invocations./ });
         });
     });
     await suite("firstInvocation", async () => {
@@ -178,34 +170,28 @@ await suite("FunctionVerification", async () => {
             t.plan(1);
             // Given
             const verification = new FunctionVerification({
-                calls: [
-                    { args: [1], returnValue: 2, time: 1000n },
-                    { args: [3], returnValue: 4, time: 2000n }
-                ]
+                calls: [{ args: [1], returnValue: 2, time: 1000n }, { args: [3], returnValue: 4, time: 2000n }]
             });
 
             // When
             const invocationVerification = verification.firstInvocation();
 
             // Then
-            t.assert.deepStrictEqual(invocationVerification, new InvocationVerification({
-                args: [1], returnValue: 2, time: 1000n
-            }));
+            t.assert.deepStrictEqual(
+                invocationVerification,
+                new InvocationVerification({ args: [1], returnValue: 2, time: 1000n })
+            );
         });
         await test("should throw if there were no invocations", async (t: TestContext) => {
             t.plan(1);
             // Given
-            const verification = new FunctionVerification({
-                calls: []
-            });
+            const verification = new FunctionVerification({ calls: [] });
 
             // Then
             t.assert.throws(() => {
                 // When
                 verification.firstInvocation();
-            }, {
-                message: /Invocation index 0 is out of bounds. There are only 0 invocations./
-            });
+            }, { message: /Invocation index 0 is out of bounds. There are only 0 invocations./ });
         });
     });
     await suite("lastInvocation", async () => {
@@ -213,45 +199,35 @@ await suite("FunctionVerification", async () => {
             t.plan(1);
             // Given
             const verification = new FunctionVerification({
-                calls: [
-                    { args: [1], returnValue: 2, time: 1000n },
-                    { args: [3], returnValue: 4, time: 2000n }
-                ]
+                calls: [{ args: [1], returnValue: 2, time: 1000n }, { args: [3], returnValue: 4, time: 2000n }]
             });
 
             // When
             const invocationVerification = verification.lastInvocation();
 
             // Then
-            t.assert.deepStrictEqual(invocationVerification, new InvocationVerification({
-                args: [3], returnValue: 4, time: 2000n
-            }));
+            t.assert.deepStrictEqual(
+                invocationVerification,
+                new InvocationVerification({ args: [3], returnValue: 4, time: 2000n })
+            );
         });
         await test("should throw if there were no invocations", async (t: TestContext) => {
             t.plan(1);
             // Given
-            const verification = new FunctionVerification({
-                calls: []
-            });
+            const verification = new FunctionVerification({ calls: [] });
 
             // Then
             t.assert.throws(() => {
                 // When
                 verification.lastInvocation();
-            }, {
-                message: /Invocation index -1 is out of bounds. There are only 0 invocations./
-            });
+            }, { message: /Invocation index -1 is out of bounds. There are only 0 invocations./ });
         });
     });
     await suite("invocationMatching", async () => {
         await test("should pass the recorded arguments to the predicate", async (t: TestContext) => {
             t.plan(2);
             // Given
-            const verification = new FunctionVerification({
-                calls: [
-                    { args: [1, 2], returnValue: 3, time: 0n }
-                ]
-            });
+            const verification = new FunctionVerification({ calls: [{ args: [1, 2], returnValue: 3, time: 0n }] });
 
             // When
             verification.invocationMatching((arg0, arg1) => {
@@ -260,98 +236,180 @@ await suite("FunctionVerification", async () => {
                 t.assert.strictEqual(arg1, 2);
                 return true;
             });
-        })
+        });
         await test("should return the correct invocation verification matching the predicate", async (t: TestContext) => {
             t.plan(1);
             // Given
             const verification = new FunctionVerification({
-                calls: [
-                    { args: [1], returnValue: 2, time: 1000n },
-                    { args: [3], returnValue: 4, time: 2000n }
-                ]
+                calls: [{ args: [1], returnValue: 2, time: 1000n }, { args: [3], returnValue: 4, time: 2000n }]
             });
 
             // When
             const invocationVerification = verification.invocationMatching(arg0 => arg0 === 3);
 
             // Then
-            t.assert.deepStrictEqual(invocationVerification, new InvocationVerification({
-                args: [3], returnValue: 4, time: 2000n
-            }));
+            t.assert.deepStrictEqual(
+                invocationVerification,
+                new InvocationVerification({ args: [3], returnValue: 4, time: 2000n })
+            );
         });
         await test("should throw if no invocation matches the predicate", async (t: TestContext) => {
             t.plan(1);
             // Given
             const verification = new FunctionVerification({
-                calls: [
-                    { args: [1 as number], returnValue: 2, time: 0n },
-                    { args: [3 as number], returnValue: 4, time: 0n }
-                ]
+                calls: [{ args: [1 as number], returnValue: 2, time: 0n }, {
+                    args: [3 as number],
+                    returnValue: 4,
+                    time: 0n
+                }]
             });
 
             // Then
             t.assert.throws(() => {
                 // When
                 verification.invocationMatching(arg0 => arg0 === 5);
-            }, {
-                message: /No invocation found matching the provided predicate./
-            });
+            }, { message: /No invocation found matching the provided predicate./ });
         });
     });
     await suite("firstInvocationMatching", async () => {
         await test("should pass the recorded invocation to the predicate", async (t: TestContext) => {
             t.plan(1);
             // Given
-            const verification = new FunctionVerification({
-                calls: [
-                    {args: [1, 2], returnValue: 3, time: 1000n}
-                ]
-            });
+            const verification = new FunctionVerification({ calls: [{ args: [1, 2], returnValue: 3, time: 1000n }] });
 
             // When
-            verification.firstInvocationMatching((invocationRecord) => {
+            verification.firstInvocationMatching(invocationRecord => {
                 // Then
-                t.assert.deepStrictEqual(invocationRecord, {
-                    args: [1, 2],
-                    returnValue: 3,
-                    time: 1000n
-                });
+                t.assert.deepStrictEqual(invocationRecord, { args: [1, 2], returnValue: 3, time: 1000n });
                 return true;
             });
-        })
+        });
         await test("should return the correct invocation verification matching the predicate", async (t: TestContext) => {
             t.plan(1);
             // Given
             const verification = new FunctionVerification({
-                calls: [
-                    {args: [1], returnValue: 2, time: 1000n},
-                    {args: [3], returnValue: 4, time: 2000n}
-                ]
+                calls: [{ args: [1], returnValue: 2, time: 1000n }, { args: [3], returnValue: 4, time: 2000n }]
             });
 
             // When
-            const invocationVerification = verification.firstInvocationMatching(invocationRecord => invocationRecord.args[0] === 3);
+            const invocationVerification = verification.firstInvocationMatching(invocationRecord =>
+                invocationRecord.args[0] === 3
+            );
             // Then
-            t.assert.deepStrictEqual(invocationVerification, new InvocationVerification({
-                args: [3], returnValue: 4, time: 2000n
-            }));
+            t.assert.deepStrictEqual(
+                invocationVerification,
+                new InvocationVerification({ args: [3], returnValue: 4, time: 2000n })
+            );
         });
         await test("should throw if no invocation matches the predicate", async (t: TestContext) => {
             t.plan(1);
             // Given
             const verification = new FunctionVerification({
-                calls: [
-                    {args: [1 as number], returnValue: 2, time: 0n},
-                    {args: [3 as number], returnValue: 4, time: 0n}
-                ]
+                calls: [{ args: [1 as number], returnValue: 2, time: 0n }, {
+                    args: [3 as number],
+                    returnValue: 4,
+                    time: 0n
+                }]
             });
 
             // Then
             t.assert.throws(() => {
                 // When
                 verification.firstInvocationMatching(invocationRecord => invocationRecord.args[0] === 5);
-            }, {
-                message: /No invocation found matching the provided predicate./
+            }, { message: /No invocation found matching the provided predicate./ });
+        });
+    });
+    await suite("lastInvocationMatching", async () => {
+        await test("should pass the recorded invocation to the predicate", async (t: TestContext) => {
+            t.plan(1);
+            // Given
+            const verification = new FunctionVerification({ calls: [{args: [0, 1], returnValue: 1, time: 1n}, { args: [1, 2], returnValue: 3, time: 1000n }] });
+
+            // When
+            verification.lastInvocationMatching(invocationRecord => {
+                // Then
+                t.assert.deepStrictEqual(invocationRecord, { args: [1, 2], returnValue: 3, time: 1000n });
+                return true;
+            });
+        });
+        await test("should return the correct invocation verification matching the predicate", async (t: TestContext) => {
+            t.plan(1);
+            // Given
+            const verification = new FunctionVerification({
+                calls: [{ args: [1], returnValue: 2, time: 1000n }, { args: [3], returnValue: 3, time: 1500n }, { args: [3], returnValue: 4, time: 2000n }]
+            });
+
+            // When
+            const invocationVerification = verification.lastInvocationMatching(invocationRecord =>
+                invocationRecord.args[0] === 3
+            );
+            // Then
+            t.assert.deepStrictEqual(
+                invocationVerification,
+                new InvocationVerification({ args: [3], returnValue: 4, time: 2000n })
+            );
+        });
+        await test("should throw if no invocation matches the predicate", async (t: TestContext) => {
+            t.plan(1);
+            // Given
+            const verification = new FunctionVerification({
+                calls: [{ args: [1 as number], returnValue: 2, time: 0n }, {
+                    args: [3 as number],
+                    returnValue: 4,
+                    time: 0n
+                }]
+            });
+
+            // Then
+            t.assert.throws(() => {
+                // When
+                verification.lastInvocationMatching(invocationRecord => invocationRecord.args[0] === 5);
+            }, { message: /No invocation found matching the provided predicate./ });
+        });
+    });
+    await suite("allInvocationsMatching", async () => {
+        await test("should return all invocation verifications matching the predicate", async (t: TestContext) => {
+            t.plan(1);
+            // Given
+            const verification = new FunctionVerification({
+                calls: [
+                    { args: [1], returnValue: 2, time: 1000n },
+                    { args: [3], returnValue: 4, time: 2000n },
+                    { args: [1], returnValue: 3, time: 3000n }
+                ]
+            });
+
+            // When
+            const invocationVerifications = verification.allInvocationsMatching(invocationRecord =>
+                invocationRecord.args[0] === 1
+            );
+
+            // Then
+            t.assert.deepStrictEqual(
+                invocationVerifications,
+                [
+                    new InvocationVerification({ args: [1], returnValue: 2, time: 1000n }),
+                    new InvocationVerification({ args: [1], returnValue: 3, time: 3000n })
+                ]
+            );
+        });
+    });
+    await suite("pickOverload", async () => {
+        await test("should return a new FunctionVerification with the same metadata but different type parameters", async (t: TestContext) => {
+            t.plan(1);
+
+            // Given
+            class Target {
+                method(arg: number, arg2?: number): number {
+                    return arg * (arg2 ?? 2);
+                }
+            }
+
+            const verification = new FunctionVerification<Parameters<Target["method"]>, number>({
+                calls: [{args: [1], returnValue: 2, time: 1000n}]
+            });
+            t.assert.doesNotThrow(() => {
+                verification.pickOverload<[number], number>();
             });
         });
     });

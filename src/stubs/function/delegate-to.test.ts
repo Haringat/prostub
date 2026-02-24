@@ -1,6 +1,6 @@
 import { suite, test, type TestContext } from "node:test";
-import { stub } from "../../symbols";
-import { delegateTo } from "./delegate-to";
+import { stub } from "../../symbols.js";
+import { delegateTo } from "./delegate-to.js";
 
 await suite("delegateTo", async () => {
     await test("should delegate to another function", (t: TestContext) => {

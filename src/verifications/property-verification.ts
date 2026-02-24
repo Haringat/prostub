@@ -1,6 +1,6 @@
-import type { PropertyStubMetadata } from "../stubs/stub";
-import { AssignmentVerification } from "./assignment-verification";
-import { ReadVerification } from "./read-verification";
+import type { PropertyStubMetadata } from "../stubs/stub.js";
+import { AssignmentVerification } from "./assignment-verification.js";
+import { ReadVerification } from "./read-verification.js";
 
 /**
  * Provides verification methods for a spied or mocked property's interactions.

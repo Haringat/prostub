@@ -1,5 +1,5 @@
-import { stub } from "../../symbols";
-import type { PropertyStub, PropertyStubMetadata } from "../stub";
+import { stub } from "../../symbols.js";
+import type { PropertyStub, PropertyStubMetadata } from "../stub.js";
 
 /**
  * Creates a property stub that tracks reads and assignments to the property.

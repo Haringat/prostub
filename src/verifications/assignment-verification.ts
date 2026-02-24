@@ -1,5 +1,5 @@
-import type { AssignmentRecord } from "../stubs/stub";
-import { InteractionVerification } from "./interaction-verification";
+import type { AssignmentRecord } from "../stubs/stub.js";
+import { InteractionVerification } from "./interaction-verification.js";
 
 /**
  * Provides verification methods for assignment interactions.

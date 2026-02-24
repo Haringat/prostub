@@ -1,5 +1,5 @@
 import { suite, test } from "node:test";
-import { AssignmentVerification } from "./assignment-verification";
+import { AssignmentVerification } from "./assignment-verification.js";
 
 await suite("AssignmentVerification", async () => {
     await suite("hasValue", async () => {
@@ -7,7 +7,10 @@ await suite("AssignmentVerification", async () => {
             t.plan(1);
 
             // Given
-            const verification = new AssignmentVerification<number>({ newValue: 1, time: BigInt(Math.floor(performance.now() * 1000000)) });
+            const verification = new AssignmentVerification<number>({
+                newValue: 1,
+                time: BigInt(Math.floor(performance.now() * 1000000))
+            });
 
             // Then
             t.assert.doesNotThrow(() => {
@@ -20,7 +23,10 @@ await suite("AssignmentVerification", async () => {
             t.plan(1);
 
             // Given
-            const verification = new AssignmentVerification<number>({ newValue: 1, time: BigInt(Math.floor(performance.now() * 1000000)) });
+            const verification = new AssignmentVerification<number>({
+                newValue: 1,
+                time: BigInt(Math.floor(performance.now() * 1000000))
+            });
 
             // Then
             t.assert.throws(() => {

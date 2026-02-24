@@ -1,5 +1,5 @@
-import { stub } from "../../symbols";
-import type { PropertyStub, PropertyStubMetadata } from "../stub";
+import { stub } from "../../symbols.js";
+import type { PropertyStub, PropertyStubMetadata } from "../stub.js";
 
 /**
  * Creates a property stub that always returns a fixed value.
@@ -28,7 +28,10 @@ export function fixedValue<const TThis extends object, const TKey extends keyof 
                 return value;
             },
             set(_thisArg, _propertyName, _newValue) {
-                metadata.assignments.push({ newValue: _newValue, time: BigInt(Math.floor(performance.now() * 1000000)) });
+                metadata.assignments.push({
+                    newValue: _newValue,
+                    time: BigInt(Math.floor(performance.now() * 1000000))
+                });
                 throw new Error("Cannot set value of a fixedValue property stub.");
             },
             metadata

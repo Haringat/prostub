@@ -1,6 +1,6 @@
 import { suite, test, type TestContext } from "node:test";
-import { stub } from "../../symbols";
-import { returnFixed } from "./return-fixed";
+import { stub } from "../../symbols.js";
+import { returnFixed } from "./return-fixed.js";
 
 await suite("returnFixed", async () => {
     await test("should return the fixed value on each invocation", (t: TestContext) => {

@@ -1,5 +1,5 @@
 import { suite, test, type TestContext } from "node:test";
-import { answer, callThrough, mock, returnFixed, spy, stub, verify } from "./index";
+import { answer, callThrough, mock, returnFixed, spy, stub, verify } from "./index.js";
 
 await suite("integration", async () => {
     await suite("mock", async () => {

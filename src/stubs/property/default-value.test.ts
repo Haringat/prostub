@@ -1,6 +1,6 @@
 import { suite, test, type TestContext } from "node:test";
-import { stub } from "../../symbols";
-import { defaultValue } from "./default-value";
+import { stub } from "../../symbols.js";
+import { defaultValue } from "./default-value.js";
 
 await suite("defaultValue", async () => {
     await test("should return initial value on read", (t: TestContext) => {

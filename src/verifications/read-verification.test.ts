@@ -1,5 +1,5 @@
 import { suite, test } from "node:test";
-import { ReadVerification } from "./read-verification";
+import { ReadVerification } from "./read-verification.js";
 
 await suite("ReadVerification", async () => {
     await suite("hadValue", async () => {
@@ -7,7 +7,10 @@ await suite("ReadVerification", async () => {
             t.plan(1);
 
             // Given
-            const verification = new ReadVerification<number>({ value: 1, time: BigInt(Math.floor(performance.now() * 1000000)) });
+            const verification = new ReadVerification<number>({
+                value: 1,
+                time: BigInt(Math.floor(performance.now() * 1000000))
+            });
 
             // Then
             t.assert.doesNotThrow(() => {
@@ -20,7 +23,10 @@ await suite("ReadVerification", async () => {
             t.plan(1);
 
             // Given
-            const verification = new ReadVerification<number>({ value: 1, time: BigInt(Math.floor(performance.now() * 1000000)) });
+            const verification = new ReadVerification<number>({
+                value: 1,
+                time: BigInt(Math.floor(performance.now() * 1000000))
+            });
 
             // Then
             t.assert.throws(() => {

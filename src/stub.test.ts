@@ -1,8 +1,8 @@
 import assert from "node:assert";
 import { test } from "node:test";
-import { mock } from "./mock";
-import { stub } from "./stub";
-import { returnFixed } from "./stubs/function/return-fixed";
+import { mock } from "./mock.js";
+import { stub } from "./stub.js";
+import { returnFixed } from "./stubs/function/return-fixed.js";
 
 test("stub() throws when assigning non-stub values", () => {
     class TestClass {

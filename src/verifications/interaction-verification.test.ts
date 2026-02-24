@@ -1,6 +1,6 @@
 import { suite, test, todo } from "node:test";
-import type { InteractionRecord } from "../stubs/stub";
-import { InteractionVerification } from "./interaction-verification";
+import type { InteractionRecord } from "../stubs/stub.js";
+import { InteractionVerification } from "./interaction-verification.js";
 
 await suite("InteractionVerification", async () => {
     class TestVerification extends InteractionVerification<InteractionRecord> {
@@ -15,8 +15,8 @@ await suite("InteractionVerification", async () => {
                 t.plan(1);
 
                 // Given
-                const readVerification = new TestVerification({time: 1000n});
-                const otherReadVerification = new TestVerification({time: 2000n});
+                const readVerification = new TestVerification({ time: 1000n });
+                const otherReadVerification = new TestVerification({ time: 2000n });
 
                 // When
                 t.assert.doesNotThrow(() => {
@@ -29,34 +29,28 @@ await suite("InteractionVerification", async () => {
                 t.plan(1);
 
                 // Given
-                const readVerification = new TestVerification({time: 1000n});
-                const otherReadVerification = new TestVerification({time: 1000n});
+                const readVerification = new TestVerification({ time: 1000n });
+                const otherReadVerification = new TestVerification({ time: 1000n });
 
                 // When
                 t.assert.throws(() => {
                     // When
                     readVerification.wasBefore(otherReadVerification);
-                }, {
-                    message:
-                        "Expected interaction at 1000 to be before interaction at 1000, but it was not."
-                });
+                }, { message: "Expected interaction at 1000 to be before interaction at 1000, but it was not." });
             });
 
             await test("should throw if the invocation was after the other  one", async t => {
                 t.plan(1);
 
                 // Given
-                const readVerification = new TestVerification({time: 2000n});
-                const otherReadVerification = new TestVerification({time: 1000n});
+                const readVerification = new TestVerification({ time: 2000n });
+                const otherReadVerification = new TestVerification({ time: 1000n });
 
                 // Then
                 t.assert.throws(() => {
                     // When
                     readVerification.wasBefore(otherReadVerification);
-                }, {
-                    message:
-                        "Expected interaction at 2000 to be before interaction at 1000, but it was not."
-                });
+                }, { message: "Expected interaction at 2000 to be before interaction at 1000, but it was not." });
             });
         });
 

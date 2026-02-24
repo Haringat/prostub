@@ -1,6 +1,6 @@
 import { suite, test, type TestContext } from "node:test";
-import { stub } from "../../symbols";
-import { trackValue } from "./track-value";
+import { stub } from "../../symbols.js";
+import { trackValue } from "./track-value.js";
 
 await suite("trackValue", async () => {
     await test("should track reads from the real property", (t: TestContext) => {

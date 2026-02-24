@@ -1,7 +1,7 @@
 import { suite, test, type TestContext } from "node:test";
-import { stub } from "../../symbols";
-import { returnFixed } from "./return-fixed";
-import { when } from "./when";
+import { stub } from "../../symbols.js";
+import { returnFixed } from "./return-fixed.js";
+import { when } from "./when.js";
 
 await suite("when", async () => {
     await test("should match arguments and return appropriate stub", (t: TestContext) => {

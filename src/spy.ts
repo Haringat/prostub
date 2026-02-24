@@ -1,8 +1,8 @@
-import "./global.ts";
-import { type Mock, type Stubbable } from "./stubs/stub";
-import { mock as mockSymbol, stub as stubSymbol } from "./symbols";
-import type { mock } from "./mock";
-import type { stub } from "./stub";
+import "./global.js";
+import type { mock } from "./mock.js";
+import type { stub } from "./stub.js";
+import { type Mock, type Stubbable } from "./stubs/stub.js";
+import { mock as mockSymbol, stub as stubSymbol } from "./symbols.js";
 
 /**
  * Creates a spy for the given real object. A spy wraps the real object and allows you to stub methods and properties while still calling through to the real implementations by default.
@@ -69,5 +69,5 @@ export function spy<const TObject extends object>(realObject: TObject): Mock<TOb
         has(target: TObject, propertyName: string | number | symbol): boolean {
             return propertyName === mockSymbol || Reflect.has(target, propertyName);
         }
-    });
+    }) as Mock<TObject>;
 }

@@ -1,11 +1,11 @@
-import type { FunctionStubMetadata, Mock, PropertyStubMetadata } from "./stubs/stub";
-import { mock as mockSymbol, stub as stubSymbol } from "./symbols";
-import type { Verification } from "./verification";
-import { FunctionVerification } from "./verifications/function-verification";
-import { PropertyVerification } from "./verifications/property-verification";
-import type {spy} from "./spy";
-import type {mock} from "./mock";
-import type {stub} from "./stub";
+import type { mock } from "./mock.js";
+import type { spy } from "./spy.js";
+import type { stub } from "./stub.js";
+import type { FunctionStubMetadata, Mock, PropertyStubMetadata } from "./stubs/stub.js";
+import { mock as mockSymbol, stub as stubSymbol } from "./symbols.js";
+import type { Verification } from "./verification.js";
+import { FunctionVerification } from "./verifications/function-verification.js";
+import { PropertyVerification } from "./verifications/property-verification.js";
 
 /**
  * starts a stub verification. The Verification API always follows the pattern `verify(<mockOrSpy>).<member>.<verification>`.
