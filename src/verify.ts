@@ -8,7 +8,7 @@ import { FunctionVerification } from "./verifications/function-verification.js";
 import { PropertyVerification } from "./verifications/property-verification.js";
 
 /**
- * starts a stub verification. The Verification API always follows the pattern `verify(<mockOrSpy>).<member>.<verification>`.
+ * starts stub verification. The Verification API always follows the pattern `verify(<mockOrSpy>).<member>.<verification>`.
  * @param mockOrSpy
  * @returns A proxy that provides access to the verification API for the specified mock or spy.
  * @example

@@ -44,6 +44,23 @@ await suite("when", async () => {
         );
     });
 
+    await test("should throw when trying to invoke a stub builder before calling then()", (t: TestContext) => {
+        t.plan(1);
+        // Given
+        class TestClass {
+            getValue(_n: number): number {
+                return 0;
+            }
+        }
+        const builder = when<TestClass, "getValue", [number], number>((n: number) => n > 0);
+
+        // Then
+        t.assert.throws(() => {
+            // When
+            builder[stub].invoke(new TestClass(), "getValue", 5);
+        }, { message: /Cannot invoke a stub builder/ });
+    });
+
     await test("should handle multiple conditions in order", (t: TestContext) => {
         t.plan(3);
         // Given

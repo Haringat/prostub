@@ -35,6 +35,23 @@ await suite("InvocationVerification", async () => {
                 invocationVerification.returned(it => it === "actual");
             });
         });
+
+        await test("should throw if the invocation threw an exception when checking return value", (t: TestContext) => {
+            t.plan(1);
+
+            // Given
+            const invocationVerification = new InvocationVerification({
+                args: [],
+                time: 0n,
+                exception: new Error("test exception")
+            });
+
+            // Then
+            t.assert.throws(() => {
+                // When
+                invocationVerification.returned(it => it === "value");
+            }, { message: /Expected invocation to return a value, but it threw an exception./ });
+        });
     });
 
     await suite("threw", async () => {
@@ -98,8 +115,69 @@ await suite("InvocationVerification", async () => {
                 invocationVerification.didNotThrow();
             });
         });
+
+        await test("should throw if invocation threw an exception", (t: TestContext) => {
+            t.plan(1);
+
+            // Given
+            const invocationVerification = new InvocationVerification({
+                args: [],
+                time: 0n,
+                exception: new Error("test exception")
+            });
+
+            // Then
+            t.assert.throws(() => {
+                // When
+                invocationVerification.didNotThrow();
+            }, { message: /Expected invocation to not throw an exception, but it threw:/ });
+        });
     });
 
     await suite("hadArguments", async () => {
+        await test("should not throw if all arguments satisfy the validators", (t: TestContext) => {
+            t.plan(1);
+
+            // Given
+            const invocationVerification = new InvocationVerification<[string, number], undefined>({
+                args: ["hello", 42],
+                time: 0n
+            });
+
+            // Then
+            t.assert.doesNotThrow(() => {
+                // When
+                invocationVerification.hadArguments(it => it === "hello", it => it === 42);
+            });
+        });
+
+        await test("should throw if an argument does not satisfy its validator", (t: TestContext) => {
+            t.plan(1);
+
+            // Given
+            const invocationVerification = new InvocationVerification<[string, number], undefined>({
+                args: ["hello", 42],
+                time: 0n
+            });
+
+            // Then
+            t.assert.throws(() => {
+                // When
+                invocationVerification.hadArguments(it => it === "world", it => it === 42);
+            }, { message: "The invocation arguments did not satisfy the provided validators." });
+        });
+
+        await test("should not throw if there are no argument validators", (t: TestContext) => {
+            t.plan(1);
+
+            // Given
+            const invocationVerification = new InvocationVerification<[], undefined>({ args: [], time: 0n });
+
+            // Then
+            t.assert.doesNotThrow(() => {
+                // When
+                invocationVerification.hadArguments();
+            });
+        });
     });
 });

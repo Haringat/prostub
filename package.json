@@ -6,7 +6,7 @@
   "scripts": {
     "prepare": "npm run test && node build.mjs",
     "test": "node --test --import ./loader/ts-loader.mjs 'src/**/*.test.ts'",
-    "test-coverage": "NODE_V8_COVERAGE=$(pwd)/coverage npm run test -- --experimental-test-coverage",
+    "test-coverage": "node --test --import ./loader/ts-loader.mjs --experimental-test-coverage --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=lcov.info 'src/**/*.test.ts'",
     "download-previous-release": "rm -fr ./previous-version && mkdir -p ./previous-version && curl $(npm view prostub dist.tarball) | tar xz -C ./previous-version --strip-components=1",
     "compare-api": "npm run download-previous-release && change-detector ./previous-version/index.d.ts ./src/index.ts"
   },
@@ -19,23 +19,23 @@
   "license": "MIT",
   "packageManager": "pnpm@10.20.0",
   "devDependencies": {
-    "@api-extractor-tools/change-detector": "^0.0.1",
-    "@eslint/compat": "^2.0.0",
+    "@api-extractor-tools/change-detector": "^0.1.0",
+    "@eslint/compat": "^2.1.0",
     "@rollup/plugin-typescript": "^12.3.0",
-    "@types/node": "^24.10.4",
-    "@typescript-eslint/eslint-plugin": "^8.51.0",
-    "@typescript-eslint/parser": "^8.51.0",
-    "dprint": "^0.50.2",
-    "eslint": "^9.39.2",
+    "@types/node": "^25.9.2",
+    "@typescript-eslint/eslint-plugin": "^8.61.0",
+    "@typescript-eslint/parser": "^8.61.0",
+    "dprint": "^0.54.0",
+    "eslint": "^10.4.1",
     "eslint-plugin-import": "^2.32.0",
-    "eslint-plugin-jsdoc": "^61.5.0",
-    "eslint-plugin-tsdoc": "^0.5.0",
-    "eslint-plugin-unicorn": "^62.0.0",
-    "globals": "^16.5.0",
-    "rollup": "^4.54.0",
-    "rollup-plugin-dts": "^6.3.0",
+    "eslint-plugin-jsdoc": "^63.0.2",
+    "eslint-plugin-tsdoc": "^0.5.2",
+    "eslint-plugin-unicorn": "^65.0.1",
+    "globals": "^17.6.0",
+    "rollup": "^4.61.1",
+    "rollup-plugin-dts": "^6.4.1",
+    "terser": "^5.48.0",
     "tslib": "^2.8.1",
-    "typescript": "^6.0.0-dev.20260224",
-    "terser": "^5.46.0"
+    "typescript": "^6.0.3"
   }
 }
