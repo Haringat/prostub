@@ -47,7 +47,7 @@ await suite("mock", async () => {
         t.plan(1);
         const mockedInstance = mock(TestClass);
 
-        t.assert.deepStrictEqual(mockedInstance[mockSymbol], { stubs: {} });
+        t.assert.deepStrictEqual(mockedInstance[mockSymbol], { stubs: {}, type: "mock" });
     });
 
     await test("should throw if unknown property is accessed", async (t: TestContext) => {

@@ -1,13 +1,16 @@
-import { mock, stub } from "../symbols.js";
+import {mock, stub} from "../symbols.js";
+import type {AnyFunction} from "../util/any-function.js";
+import type {MethodArgs} from "../util/method-args.js";
+import type {PredicateTuple} from "../util/predicate-tuple.js";
 
 export interface InteractionRecord {
     time: bigint;
 }
 
-export interface InvocationRecord<TArgs extends Array<unknown>, TReturn> extends InteractionRecord {
-    args: TArgs;
-    returnValue?: TReturn;
-    exception?: unknown;
+export interface InvocationRecord<TFunction extends AnyFunction> extends InteractionRecord {
+    args: Parameters<TFunction>;
+    returnValue?: ReturnType<TFunction>;
+    error?: unknown;
 }
 
 export interface AssignmentRecord<TValue> extends InteractionRecord {
@@ -18,35 +21,67 @@ export interface ReadRecord<TValue> extends InteractionRecord {
     value: TValue;
 }
 
-export interface FunctionStub<TThis extends object, TKey extends keyof TThis, TArgs extends Array<unknown>, TReturn> {
+export interface Stub<TValueType> {
     [stub]: {
-        invoke: (thisArg: TThis, propertyName: TKey, ...args: TArgs) => TReturn;
-        type: "function";
-        metadata: FunctionStubMetadata<TArgs, TReturn>;
+        interactions: {
+            get(receiver: unknown): TValueType;
+            set(receiver: unknown, newValue: TValueType): boolean;
+        };
+        interactionRecords: {
+            reads: Array<ReadRecord<TValueType>>;
+            writes: Array<AssignmentRecord<TValueType>>;
+        } & (TValueType extends AnyFunction ? {
+            invocations: Array<InvocationRecord<TValueType>>;
+        } : object);
     };
 }
 
-export interface PropertyStubMetadata<TValue> {
-    reads: Array<ReadRecord<TValue>>;
-    assignments: Array<AssignmentRecord<TValue>>;
+export type ConditionalStubber<TFunction extends AnyFunction, IsSpy extends boolean> = {
+    override(stub: Stub<TFunction>): OngoingStubChain<TFunction, IsSpy>;
+} & (IsSpy extends true ? {
+    passThrough(): OngoingStubChain<TFunction, IsSpy>;
+} : object);
+
+export type OngoingStubChain<TFunction extends AnyFunction, IsSpy extends boolean> = {
+    on(...predicates: PredicateTuple<MethodArgs<TFunction>>): ConditionalStubber<TFunction, IsSpy>;
+    override(stub: Stub<TFunction>): OngoingStubChain<TFunction, IsSpy>;
+} & (IsSpy extends true ? {
+    passThrough(): OngoingStubChain<TFunction, IsSpy>;
+} : object);
+
+export type MemberStubber<TValue, IsSpy extends boolean> = {
+    override(stub: Stub<TValue>): void;
+} & (IsSpy extends true ? {
+    passThrough(): void;
+} : object) & (TValue extends AnyFunction ? {
+    on(...predicates: PredicateTuple<MethodArgs<TValue>>): ConditionalStubber<TValue, IsSpy>;
+} : object);
+
+export type StubbingMock<T extends object> = {
+    readonly [K in keyof T]: MemberStubber<T[K], false>;
+};
+
+export type StubbingSpy<T extends object> = {
+    readonly [K in keyof T]: MemberStubber<T[K], true>;
+};
+
+export type Stubbing<T extends object> = StubbingSpy<T> | StubbingMock<T>;
+
+export type StubData<TObject extends object> = {
+    readonly [TKey in keyof TObject]?: Stub<TObject[TKey]>;
 }
 
-export interface FunctionStubMetadata<TArgs extends Array<unknown>, TReturn> {
-    calls: Array<InvocationRecord<TArgs, TReturn>>;
-}
-
-export interface PropertyStub<TThis extends object, TKey extends keyof TThis> {
-    [stub]: {
-        metadata: PropertyStubMetadata<TThis[TKey]>;
-        type: "property";
-        get(thisArg: TThis, propertyName: TKey): TThis[TKey];
-        set(thisArg: TThis, propertyName: TKey, newValue: TThis[TKey]): void;
+export type Spy<T extends object> = T & {
+    [mock]: {
+        stubs: StubData<T>;
+        type: "spy";
+        target: T;
     };
-}
+};
 
-export type Stubbable<T extends object> = { -readonly [K in keyof T]: Stub<T, K>; };
-
-export type Stub<TThis extends object, TKey extends keyof TThis> = TThis[TKey] extends
-    (...args: infer TArgs) => infer TReturn ? FunctionStub<TThis, TKey, TArgs, TReturn> : PropertyStub<TThis, TKey>;
-
-export type Mock<T extends object> = T & { [mock]: { stubs: { -readonly [TKey in keyof T]: Stub<T, TKey>; }; }; };
+export type Mock<T extends object> = T & {
+    [mock]: {
+        stubs: StubData<T>;
+        type: "mock";
+    };
+};

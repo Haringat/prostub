@@ -3,7 +3,7 @@ import { mock } from "./mock.js";
 import { stub } from "./stub.js";
 import { fixedValue } from "./stubs/property/fixed-value.js";
 import { verify } from "./verify.js";
-import { PropertyVerification } from "./verifications/property-verification.js";
+import { Verification } from "./verifications/verification.js";
 
 await suite("verify", async () => {
     await test("should throw when verifying a property with no stub defined", (t: TestContext) => {
@@ -32,12 +32,12 @@ await suite("verify", async () => {
         }
 
         const mockInstance = mock(TestClass);
-        stub(mockInstance).property = fixedValue<TestClass, "property">("stubbed");
+        stub(mockInstance).property.override(fixedValue<string>("stubbed"));
 
         // When
         const result = verify(mockInstance).property;
 
         // Then
-        t.assert.ok(result instanceof PropertyVerification);
+        t.assert.ok(result instanceof Verification);
     });
 });

@@ -8,3 +8,4 @@ temp
 previous-version
 etc
 lcov.info
+*.xml

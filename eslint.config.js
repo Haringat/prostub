@@ -19,7 +19,7 @@ export default defineConfig([{
         parser: tsParser,
         sourceType: "module",
 
-        parserOptions: { ecmaVerison: 2025, project: "tsconfig.lint.json" }
+        parserOptions: { ecmaVersion: 2025, project: "tsconfig.lint.json" }
     },
 
     plugins: { unicorn, "import": fixupPluginRules(_import), jsdoc, "@typescript-eslint": typescriptEslint },

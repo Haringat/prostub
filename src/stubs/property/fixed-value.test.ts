@@ -9,12 +9,12 @@ await suite("fixedValue", async () => {
         class TestClass {
             someProperty = "";
         }
-        const fixedStub = fixedValue<TestClass, "someProperty">("fixed string");
+        const fixedStub = fixedValue<string>("fixed string");
 
         // When
-        const result1 = fixedStub[stub].get(new TestClass(), "someProperty");
-        const result2 = fixedStub[stub].get(new TestClass(), "someProperty");
-        const result3 = fixedStub[stub].get(new TestClass(), "someProperty");
+        const result1 = fixedStub[stub].interactions.get(new TestClass());
+        const result2 = fixedStub[stub].interactions.get(new TestClass());
+        const result3 = fixedStub[stub].interactions.get(new TestClass());
 
         // Then
         t.assert.strictEqual(result1, "fixed string");
@@ -34,14 +34,14 @@ await suite("fixedValue", async () => {
         class NullableClass {
             prop = null;
         }
-        const numberStub = fixedValue<NumberClass, "prop">(42);
-        const objectStub = fixedValue<ObjectClass, "prop">({ x: 1, y: 2 });
-        const nullStub = fixedValue<NullableClass, "prop">(null);
+        const numberStub = fixedValue<number>(42);
+        const objectStub = fixedValue<{ x: number; y: number; }>({ x: 1, y: 2 });
+        const nullStub = fixedValue<null>(null);
 
         // When
-        const numberResult = numberStub[stub].get(new NumberClass(), "prop");
-        const objectResult = objectStub[stub].get(new ObjectClass(), "prop");
-        const nullResult = nullStub[stub].get(new NullableClass(), "prop");
+        const numberResult = numberStub[stub].interactions.get(new NumberClass());
+        const objectResult = objectStub[stub].interactions.get(new ObjectClass());
+        const nullResult = nullStub[stub].interactions.get(new NullableClass());
 
         // Then
         t.assert.strictEqual(numberResult, 42);
@@ -55,13 +55,13 @@ await suite("fixedValue", async () => {
         class TestClass {
             someProperty = "";
         }
-        const fixedStub = fixedValue<TestClass, "someProperty">("immutable");
+        const fixedStub = fixedValue<string>("immutable");
 
         // Then
         t.assert.throws(
             // When
-            () => fixedStub[stub].set(new TestClass(), "someProperty", "new value"),
-            { message: /Cannot set value of a fixedValue property stub/ }
+            () => fixedStub[stub].interactions.set(new TestClass(), "new value"),
+            { message: /Cannot set the value of a fixedValue property stub/ }
         );
     });
 
@@ -71,13 +71,13 @@ await suite("fixedValue", async () => {
         class TestClass {
             someProperty = "";
         }
-        const fixedStub = fixedValue<TestClass, "someProperty">("test");
+        const fixedStub = fixedValue<string>("test");
 
         // When
-        fixedStub[stub].get(new TestClass(), "someProperty");
-        fixedStub[stub].get(new TestClass(), "someProperty");
+        fixedStub[stub].interactions.get(new TestClass());
+        fixedStub[stub].interactions.get(new TestClass());
 
         // Then
-        t.assert.strictEqual(fixedStub[stub].metadata.reads.length, 2);
+        t.assert.strictEqual(fixedStub[stub].interactionRecords.reads.length, 2);
     });
 });

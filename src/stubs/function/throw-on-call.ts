@@ -1,34 +1,48 @@
 import { stub } from "../../symbols.js";
-import type { FunctionStub, FunctionStubMetadata } from "../stub.js";
+import type { Stub } from "../stub.js";
+import type { AnyFunction } from "../../util/any-function.js";
 
 /**
  * Creates a function stub that throws an error when invoked.
  * It also records each invocation's arguments, exceptions, and timestamps.
- * @typeParam TObject - The type of the object containing the function.
- * @typeParam TKey - The key of the function within the object.
- * @typeParam TArgs - The types of the arguments the function accepts.
  * @returns A function stub that throws an error on invocation and records invocations.
  * @example
  * ```ts
- * stub(myStubbedObject).someMethod = throwOnCall(() => new Error("method was called"));
+ * stub(myStubbedObject).someMethod.override(throwOnCall(() => new Error("method was called")));
  * ```
  * @param errorFactory
  */
-export function throwOnCall<
-    const TObject extends object,
-    const TKey extends keyof TObject,
-    const TArgs extends Array<unknown>
->(errorFactory: () => Error): FunctionStub<TObject, TKey, TArgs, never> {
-    const metadata: FunctionStubMetadata<TArgs, never> = { calls: [] };
-    return {
-        [stub]: {
-            invoke: function(_thisArg, _propertyName, ...args) {
-                const error = errorFactory();
-                metadata.calls.push({ args, exception: error, time: BigInt(Math.floor(performance.now() * 1000000)) });
-                throw error;
+export function throwOnCall(errorFactory: () => Error): Stub<AnyFunction> {
+    let wrappedFunction: AnyFunction;
+    const metadata: Stub<AnyFunction>[typeof stub] = {
+        interactions: {
+            get: (_receiver) => {
+                wrappedFunction = function(...args: Parameters<AnyFunction>) {
+                    const error = errorFactory();
+                    metadata.interactionRecords.invocations.push({
+                        time: BigInt(Math.floor(performance.now() * 1000000)),
+                        args: args,
+                        error
+                    });
+                    throw error;
+                } as AnyFunction;
+                metadata.interactionRecords.reads.push({
+                    time: BigInt(Math.floor(performance.now() * 1000000)),
+                    value: wrappedFunction
+                })
+                return wrappedFunction;
             },
-            type: "function",
-            metadata
+            set: (_receiver, _value) => {
+                throw new Error("Cannot set overridden noop function");
+            }
+        },
+        interactionRecords: {
+            reads: [],
+            writes: [],
+            invocations: []
         }
+    };
+    return {
+        [stub]: metadata
     };
 }

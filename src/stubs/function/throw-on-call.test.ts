@@ -11,7 +11,7 @@ await suite("throwOnCall", async () => {
         // Then
         t.assert.throws(
             // When
-            () => throwStub[stub].invoke({}, "someProperty" as keyof object),
+            () => throwStub[stub].interactions.get({})(),
             { message: /method was called/ }
         );
     });
@@ -25,7 +25,7 @@ await suite("throwOnCall", async () => {
         // Then
         t.assert.throws(
             // When
-            () => throwStub[stub].invoke({}, "someProperty" as keyof object),
+            () => throwStub[stub].interactions.get({})(),
             { message: /Custom error message/ }
         );
     });
@@ -36,7 +36,7 @@ await suite("throwOnCall", async () => {
         const throwStub = throwOnCall(() => new Error("error"));
 
         // Then
-        t.assert.throws(() => throwStub[stub].invoke({}, "someProperty" as keyof object));
-        t.assert.throws(() => throwStub[stub].invoke({}, "someProperty" as keyof object));
+        t.assert.throws(() => throwStub[stub].interactions.get({})());
+        t.assert.throws(() => throwStub[stub].interactions.get({})());
     });
 });

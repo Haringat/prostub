@@ -36,21 +36,21 @@ await suite("InvocationVerification", async () => {
             });
         });
 
-        await test("should throw if the invocation threw an exception when checking return value", (t: TestContext) => {
+        await test("should throw if the invocation threw an error when checking return value", (t: TestContext) => {
             t.plan(1);
 
             // Given
             const invocationVerification = new InvocationVerification({
                 args: [],
                 time: 0n,
-                exception: new Error("test exception")
+                error: new Error("test error")
             });
 
             // Then
             t.assert.throws(() => {
                 // When
                 invocationVerification.returned(it => it === "value");
-            }, { message: /Expected invocation to return a value, but it threw an exception./ });
+            }, { message: /Expected invocation to return a value, but it threw an error./ });
         });
     });
 
@@ -64,41 +64,41 @@ await suite("InvocationVerification", async () => {
             // Then
             t.assert.throws(() => {
                 // When
-                invocationVerification.threw(it => it instanceof Error && it.message === "test exception");
-            }, { message: /Expected invocation to throw an exception, but it did not./ });
+                invocationVerification.threw(it => it instanceof Error && it.message === "test error");
+            }, { message: /Expected invocation to throw an error, but it did not./ });
         });
 
-        await test("should throw if thrown exception does not match predicate", (t: TestContext) => {
+        await test("should throw if thrown error does not match predicate", (t: TestContext) => {
             t.plan(1);
 
             // Given
             const invocationVerification = new InvocationVerification({
                 args: [],
                 time: 0n,
-                exception: new Error("unexpected exception")
+                error: new Error("unexpected error")
             });
 
             // Then
             t.assert.throws(() => {
                 // When
-                invocationVerification.threw(it => it instanceof Error && it.message === "test exception");
-            }, { message: /The thrown exception did not satisfy the provided validator./ });
+                invocationVerification.threw(it => it instanceof Error && it.message === "test error");
+            }, { message: /The thrown error did not satisfy the provided validator./ });
         });
 
-        await test("should not throw if thrown exception matches predicate", (t: TestContext) => {
+        await test("should not throw if thrown error matches predicate", (t: TestContext) => {
             t.plan(1);
 
             // Given
             const invocationVerification = new InvocationVerification({
                 args: [],
                 time: 0n,
-                exception: new Error("test exception")
+                error: new Error("test error")
             });
 
             // Then
             t.assert.doesNotThrow(() => {
                 // When
-                invocationVerification.threw(it => it instanceof Error && it.message === "test exception");
+                invocationVerification.threw(it => it instanceof Error && it.message === "test error");
             }, { message: /.*/ });
         });
     });
@@ -116,21 +116,21 @@ await suite("InvocationVerification", async () => {
             });
         });
 
-        await test("should throw if invocation threw an exception", (t: TestContext) => {
+        await test("should throw if invocation threw an error", (t: TestContext) => {
             t.plan(1);
 
             // Given
             const invocationVerification = new InvocationVerification({
                 args: [],
                 time: 0n,
-                exception: new Error("test exception")
+                error: new Error("test error")
             });
 
             // Then
             t.assert.throws(() => {
                 // When
                 invocationVerification.didNotThrow();
-            }, { message: /Expected invocation to not throw an exception, but it threw:/ });
+            }, { message: /Expected invocation to not throw an error, but it threw:/ });
         });
     });
 
@@ -139,7 +139,7 @@ await suite("InvocationVerification", async () => {
             t.plan(1);
 
             // Given
-            const invocationVerification = new InvocationVerification<[string, number], undefined>({
+            const invocationVerification = new InvocationVerification<(a: string, b: number) => undefined>({
                 args: ["hello", 42],
                 time: 0n
             });
@@ -155,7 +155,7 @@ await suite("InvocationVerification", async () => {
             t.plan(1);
 
             // Given
-            const invocationVerification = new InvocationVerification<[string, number], undefined>({
+            const invocationVerification = new InvocationVerification<(a: string, b: number) => undefined>({
                 args: ["hello", 42],
                 time: 0n
             });
@@ -171,7 +171,7 @@ await suite("InvocationVerification", async () => {
             t.plan(1);
 
             // Given
-            const invocationVerification = new InvocationVerification<[], undefined>({ args: [], time: 0n });
+            const invocationVerification = new InvocationVerification<() => undefined>({ args: [], time: 0n });
 
             // Then
             t.assert.doesNotThrow(() => {

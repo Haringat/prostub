@@ -9,9 +9,9 @@ await suite("returnSerial", async () => {
         const serialStub = returnSerial(1, 2, 3);
 
         // When
-        const result1 = serialStub[stub].invoke({}, "someProperty" as keyof object);
-        const result2 = serialStub[stub].invoke({}, "someProperty" as keyof object);
-        const result3 = serialStub[stub].invoke({}, "someProperty" as keyof object);
+        const result1 = serialStub[stub].interactions.get({})();
+        const result2 = serialStub[stub].interactions.get({})();
+        const result3 = serialStub[stub].interactions.get({})();
 
         // Then
         t.assert.strictEqual(result1, 1);
@@ -23,14 +23,14 @@ await suite("returnSerial", async () => {
         t.plan(1);
         // Given
         const serialStub = returnSerial(1, 2);
-        serialStub[stub].invoke({}, "someProperty" as keyof object);
-        serialStub[stub].invoke({}, "someProperty" as keyof object);
+        serialStub[stub].interactions.get({})();
+        serialStub[stub].interactions.get({})();
 
         // Then
         t.assert.throws(
             // When
-            () => serialStub[stub].invoke({}, "someProperty" as keyof object),
-            { message: /No more return values left/ }
+            () => serialStub[stub].interactions.get({})(),
+            { message: /No more values to return./ }
         );
     });
 
@@ -40,7 +40,7 @@ await suite("returnSerial", async () => {
         const serialStub = returnSerial(42);
 
         // When
-        const result = serialStub[stub].invoke({}, "someProperty" as keyof object);
+        const result = serialStub[stub].interactions.get({})();
 
         // Then
         t.assert.strictEqual(result, 42);

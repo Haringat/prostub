@@ -1,8 +1,9 @@
 import "./global.js";
 import type { mock } from "./mock.js";
 import type { stub } from "./stub.js";
-import { type Mock, type Stubbable } from "./stubs/stub.js";
+import type { Spy, StubData } from "./stubs/stub.js";
 import { mock as mockSymbol, stub as stubSymbol } from "./symbols.js";
+import { _throw } from "./util/throw.js";
 
 /**
  * Creates a spy for the given real object. A spy wraps the real object and allows you to stub methods and properties while still calling through to the real implementations by default.
@@ -21,53 +22,38 @@ import { mock as mockSymbol, stub as stubSymbol } from "./symbols.js";
  *
  * @see {@link stub} for stubbing methods and properties on the spy.
  * @see {@link mock} for creating mock instances of classes.
+ * @see {@link verify} for verifying interactions with the spy.
  * @param realObject The real object to create a spy for.
  */
-export function spy<const TObject extends object>(realObject: TObject): Mock<TObject> {
-    const stubs = {} as Stubbable<TObject>;
-    return new Proxy(realObject as Mock<TObject>, {
-        set<TKey extends PropertyKey>(
+export function spy<const TObject extends object>(realObject: TObject): Spy<TObject> {
+    const stubs = {} as StubData<TObject>;
+    return new Proxy(realObject as Spy<TObject>, {
+        set(
             target: TObject,
-            propertyName: TKey,
+            propertyName: string | symbol,
             newValue: unknown,
             _receiver: unknown
         ): boolean {
-            if (!stubs.hasOwnProperty(propertyName)) {
-                throw new Error(`No stub defined for property "${String(propertyName)}".`);
-            }
-            const stubMetadata = stubs[propertyName][stubSymbol];
-            if (stubMetadata.type !== "property") {
-                throw new Error(`Cannot set value of non-property stub "${String(propertyName)}".`);
-            }
-            stubMetadata.set(target, propertyName as never, newValue as never);
-            return true;
+            const propertyData = stubs[propertyName as keyof typeof stubs] ?? _throw(new Error(`No stub defined for property "${String(propertyName)}".`));
+            return propertyData[stubSymbol].interactions.set(target, newValue as never);
         },
-        get<TKey extends keyof TObject>(
+        get(
             target: TObject,
-            propertyName: PropertyKey,
+            propertyName: string | symbol,
             _receiver: unknown
-        ): TObject[TKey] | { stubs: typeof stubs; } {
+        ) {
             if (propertyName === mockSymbol) {
-                return { stubs };
-            }
-            if (!stubs.hasOwnProperty(propertyName)) {
-                throw new Error(`No stub defined for property "${String(propertyName)}".`);
-            }
-            const stubMetadata = stubs[propertyName as TKey & keyof TObject][stubSymbol];
-            if (stubMetadata.type === "function") {
-                const returnValue = function(
-                    this: TObject,
-                    ...args: Parameters<TObject[TKey & keyof TObject] & ((...args: Array<unknown>) => unknown)>
-                ) {
-                    return stubMetadata.invoke(realObject, propertyName as TKey & keyof TObject, ...args);
+                return {
+                    stubs,
+                    type: "spy",
+                    target: realObject
                 };
-                return returnValue as TObject[TKey & keyof TObject];
-            } else {
-                return stubMetadata.get(target, propertyName as TKey & keyof TObject);
             }
+            const propertyData = stubs[propertyName as keyof typeof stubs] ?? _throw(new Error(`No stub defined for property "${String(propertyName)}".`));
+            return propertyData[stubSymbol].interactions.get(target);
         },
         has(target: TObject, propertyName: string | number | symbol): boolean {
-            return propertyName === mockSymbol || Reflect.has(target, propertyName);
+            return propertyName === mockSymbol || Reflect.has(target, propertyName) || Reflect.has(stubs, propertyName);
         }
-    }) as Mock<TObject>;
+    }) as Spy<TObject>;
 }

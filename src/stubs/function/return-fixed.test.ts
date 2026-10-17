@@ -9,9 +9,9 @@ await suite("returnFixed", async () => {
         const fixedStub = returnFixed(42);
 
         // When
-        const result1 = fixedStub[stub].invoke({}, "someProperty" as keyof object);
-        const result2 = fixedStub[stub].invoke({}, "someProperty" as keyof object);
-        const result3 = fixedStub[stub].invoke({}, "someProperty" as keyof object);
+        const result1 = fixedStub[stub].interactions.get({})();
+        const result2 = fixedStub[stub].interactions.get({})();
+        const result3 = fixedStub[stub].interactions.get({})();
 
         // Then
         t.assert.strictEqual(result1, 42);
@@ -27,9 +27,9 @@ await suite("returnFixed", async () => {
         const nullStub = returnFixed(null);
 
         // When
-        const stringResult = stringStub[stub].invoke({}, "someProperty" as keyof object);
-        const objectResult = objectStub[stub].invoke({}, "someProperty" as keyof object);
-        const nullResult = nullStub[stub].invoke({}, "someProperty" as keyof object);
+        const stringResult = stringStub[stub].interactions.get({})();
+        const objectResult = objectStub[stub].interactions.get({})();
+        const nullResult = nullStub[stub].interactions.get({})();
 
         // Then
         t.assert.strictEqual(stringResult, "fixed string");
@@ -40,11 +40,11 @@ await suite("returnFixed", async () => {
     await test("should ignore call arguments", (t: TestContext) => {
         t.plan(2);
         // Given
-        const fixedStub = returnFixed(100);
+        const fixedStub = returnFixed<(a: number | string, b: number | string, c?: number | string) => number>(100);
 
         // When
-        const resultWithArgs1 = fixedStub[stub].invoke({}, "someProperty" as keyof object, 1, 2, 3);
-        const resultWithArgs2 = fixedStub[stub].invoke({}, "someProperty" as keyof object, "a", "b");
+        const resultWithArgs1 = fixedStub[stub].interactions.get({})(1, 2, 3);
+        const resultWithArgs2 = fixedStub[stub].interactions.get({})("a", "b");
 
         // Then
         t.assert.strictEqual(resultWithArgs1, 100);

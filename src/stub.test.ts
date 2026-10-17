@@ -13,8 +13,8 @@ test("stub() throws when assigning non-stub values", () => {
 
     const mockInstance = mock(TestClass);
     assert.throws(() => {
-        (stub(mockInstance) as unknown as { method: unknown; }).method = "not a stub";
-    }, { message: /must be a stub/ });
+        (stub(mockInstance) as unknown as { method: { override(a: unknown): void }; }).method.override("not a stub");
+    }, { message: /Behavior for property ".+" is not a stub./ });
 });
 
 test("stub() throws when defining stub twice for same property", () => {
@@ -25,23 +25,8 @@ test("stub() throws when defining stub twice for same property", () => {
     }
 
     const mockInstance = mock(TestClass);
-    stub(mockInstance).method = returnFixed("first");
+    stub(mockInstance).method.override(returnFixed("first"));
     assert.throws(() => {
-        stub(mockInstance).method = returnFixed("second");
+        stub(mockInstance).method.override(returnFixed("second"));
     }, { message: /already defined/ });
-});
-
-test("stub() throws when trying to read a stub (stubs can only be set)", () => {
-    class TestClass {
-        method() {
-            return "original";
-        }
-    }
-
-    const mockInstance = mock(TestClass);
-    stub(mockInstance).method = returnFixed("value");
-
-    assert.throws(() => {
-        void ((stub(mockInstance) as unknown as TestClass).method);
-    }, { message: /Cannot get stub/ });
 });

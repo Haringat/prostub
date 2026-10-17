@@ -1,5 +1,5 @@
 import { suite, test, type TestContext } from "node:test";
-import { answer, callThrough, mock, returnFixed, spy, stub, verify } from "./index.js";
+import { answer, mock, returnFixed, spy, stub, verify } from "./index.js";
 
 await suite("integration", async () => {
     await suite("mock", async () => {
@@ -14,7 +14,7 @@ await suite("integration", async () => {
             }
 
             const mockInstance = mock(TestClass);
-            stub(mockInstance).method = answer((x: number) => x * 2);
+            stub(mockInstance).method.override(answer(x => x * 2));
 
             // When
             mockInstance.method(5);
@@ -24,9 +24,9 @@ await suite("integration", async () => {
             // Then
             t.assert.doesNotThrow(() => {
                 verify(mockInstance).method.wasCalledTimes(3);
-                verify(mockInstance).method.firstInvocation().returned((it: unknown) => it === 10);
-                verify(mockInstance).method.nthInvocation(1).returned((it: unknown) => it === 20);
-                verify(mockInstance).method.lastInvocation().returned((it: unknown) => it === 30);
+                verify(mockInstance).method.firstInvocation().returned(it => it === 10);
+                verify(mockInstance).method.nthInvocation(1).returned(it => it === 20);
+                verify(mockInstance).method.lastInvocation().returned(it => it === 30);
             });
         });
     });
@@ -48,8 +48,8 @@ await suite("integration", async () => {
 
             const realInstance = new RealClass();
             const spied = spy(realInstance);
-            stub(spied).multiply = callThrough<RealClass, "multiply", [number], number>();
-            stub(spied).double = returnFixed(100);
+            stub(spied).multiply.passThrough();
+            stub(spied).double.override(returnFixed(100));
 
             // When
             const multiplyResult = spied.multiply(5);
@@ -64,6 +64,30 @@ await suite("integration", async () => {
                 verify(spied).double.wasCalled();
                 verify(spied).double.firstInvocation().returned(it => it === 100);
             });
+        });
+
+        await test("stub can override conditionally", (t: TestContext) => {
+            // Given
+            class TestClass {
+                method(_x: number) {
+                    return 0;
+                }
+            }
+            const mockInstance = spy(new TestClass());
+
+            stub(mockInstance).method.on((it: number) => it > 10).override(returnFixed(100))
+                .on(it => it === 5).passThrough()
+                .on(() => true).override(returnFixed(2));
+
+            // When
+            const result1 = mockInstance.method(11);
+            const result2 = mockInstance.method(5);
+            const result3 = mockInstance.method(8);
+
+            // Then
+            t.assert.strictEqual(result1, 100);
+            t.assert.strictEqual(result2, 0);
+            t.assert.strictEqual(result3, 2);
         });
     });
 });

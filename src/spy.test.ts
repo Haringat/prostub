@@ -39,7 +39,7 @@ await suite("spy", async () => {
         const spyInfo = spied[mock];
 
         // Then
-        t.assert.deepStrictEqual(spyInfo, { stubs: {} });
+        t.assert.deepStrictEqual(spyInfo, { stubs: {}, type: "spy", target: realInstance });
     });
 
     await test("should throw if unstubbed property is accessed", (t: TestContext) => {
@@ -70,7 +70,7 @@ await suite("spy", async () => {
 
         const realInstance = new TestClass();
         const spied = spy(realInstance);
-        stub(spied).property = defaultValue<TestClass, "property">("stubbed");
+        stub(spied).property.override(defaultValue("stubbed"));
 
         // Then
         t.assert.strictEqual(spied.property, "stubbed");
@@ -86,7 +86,7 @@ await suite("spy", async () => {
 
         const realInstance = new TestClass();
         const spied = spy(realInstance);
-        stub(spied).property = defaultValue<TestClass, "property">("initial");
+        stub(spied).property.override(defaultValue("initial"));
 
         // When
         spied.property = "updated";
@@ -105,13 +105,13 @@ await suite("spy", async () => {
 
         const realInstance = new TestClass();
         const spied = spy(realInstance);
-        stub(spied).method = noop<TestClass, "method", []>();
+        stub(spied).method.override(noop());
 
         // Then
         t.assert.throws(() => {
             // When
             Reflect.set(spied, "method", "value");
-        }, { message: /Cannot set value of non-property stub "method"/ });
+        }, { message: /Cannot set overridden/ });
     });
 
     await test("should support 'in' operator via has trap", (t: TestContext) => {

@@ -1,10 +1,13 @@
-import type { ArgumentPredicate } from "../argument-predicate.js";
 import type { InvocationRecord } from "../stubs/stub.js";
 import { InteractionVerification } from "./interaction-verification.js";
+import type { AnyFunction } from "../util/any-function.js";
+import type {OverloadToUnion} from "../util/overload-to-union.js";
+import type {PredicateTuple} from "../util/predicate-tuple.js";
+import type {MethodArgs} from "../util/method-args.js";
 
-export class InvocationVerification<const TArgs extends Array<unknown>, TReturn>
-    extends InteractionVerification<InvocationRecord<TArgs, TReturn>> {
-    constructor(call: InvocationRecord<TArgs, TReturn>) {
+export class InvocationVerification<const TValue extends AnyFunction> extends InteractionVerification<InvocationRecord<TValue>> {
+
+    constructor(call: InvocationRecord<TValue>) {
         super(call);
     }
 
@@ -12,35 +15,35 @@ export class InvocationVerification<const TArgs extends Array<unknown>, TReturn>
      * Checks the returned value against a provided validator function.
      * @param validator - A function that validates the returned value.
      */
-    returned(validator: (result: TReturn) => boolean): void {
-        if (this.interactionRecord.exception) {
-            throw new Error(`Expected invocation to return a value, but it threw an exception.`);
+    returned(validator: (result: ReturnType<OverloadToUnion<TValue>>) => boolean): void {
+        if (this.interactionRecord.error) {
+            throw new Error(`Expected invocation to return a value, but it threw an error.`);
         }
-        if (!validator(this.interactionRecord.returnValue as TReturn)) {
+        if (!validator(this.interactionRecord.returnValue as ReturnType<OverloadToUnion<TValue>>)) {
             throw new Error(`The returned value did not satisfy the provided validator.`);
         }
     }
 
     /**
-     * Checks the thrown exception against a provided validator function.
-     * @param validator - A function that validates the thrown exception.
+     * Checks the thrown error against a provided validator function.
+     * @param validator - A function that validates the thrown error.
      */
     threw(validator: (error: unknown) => boolean): void {
-        if (!this.interactionRecord.exception) {
-            throw new Error(`Expected invocation to throw an exception, but it did not.`);
+        if (!this.interactionRecord.error) {
+            throw new Error(`Expected invocation to throw an error, but it did not.`);
         }
-        if (!validator(this.interactionRecord.exception)) {
-            throw new Error(`The thrown exception did not satisfy the provided validator.`);
+        if (!validator(this.interactionRecord.error)) {
+            throw new Error(`The thrown error did not satisfy the provided validator.`);
         }
     }
 
     /**
-     * Checks that the invocation did not throw an exception.
+     * Checks that the invocation did not throw an error.
      */
     didNotThrow(): void {
-        if (this.interactionRecord.exception) {
+        if (this.interactionRecord.error) {
             throw new Error(
-                `Expected invocation to not throw an exception, but it threw: ${this.interactionRecord.exception}`
+                `Expected invocation to not throw an error, but it threw: ${this.interactionRecord.error}`
             );
         }
     }
@@ -49,8 +52,8 @@ export class InvocationVerification<const TArgs extends Array<unknown>, TReturn>
      * Checks the invocation arguments against provided validators.
      * @param validators - An array of functions that validate each argument.
      */
-    hadArguments(...validators: ArgumentPredicate<TArgs>): void {
-        const hasArguments = validators.every((validator, index) => validator(this.interactionRecord.args[index]));
+    hadArguments(...validators: PredicateTuple<MethodArgs<TValue>>): void {
+        const hasArguments = (validators as PredicateTuple<MethodArgs<TValue>> & Array<(it: unknown) => boolean>).every((validator, index) => validator(this.interactionRecord.args[index]));
         if (!hasArguments) {
             throw new Error(`The invocation arguments did not satisfy the provided validators.`);
         }

@@ -1,12 +1,20 @@
 import { suite, test } from "node:test";
-import { PropertyVerification } from "./property-verification.js";
+import { Verification } from "./verification.js";
 
 await suite("PropertyVerification", async () => {
     await suite("wasReadNTimes", async () => {
         await test("should not throw if the property was read the expected number of times", t => {
             t.plan(1);
 
-            const propertyVerification = new PropertyVerification({ assignments: [], reads: [{ time: 0n, value: 0 }] });
+            const propertyVerification = new Verification<number>({
+                writes: [],
+                reads: [
+                    {
+                        time: 0n,
+                        value: 0
+                    }
+                ]
+            });
 
             t.assert.doesNotThrow(() => {
                 propertyVerification.wasReadNTimes(1);
@@ -15,7 +23,7 @@ await suite("PropertyVerification", async () => {
         await test("should throw if the property was read a different number of times", t => {
             t.plan(1);
 
-            const propertyVerification = new PropertyVerification({ assignments: [], reads: [] });
+            const propertyVerification = new Verification({ writes: [], reads: [] });
 
             t.assert.throws(() => {
                 propertyVerification.wasReadNTimes(1);
@@ -24,7 +32,7 @@ await suite("PropertyVerification", async () => {
         await test("should not throw if the property was expected to be read zero times and was never read", t => {
             t.plan(1);
 
-            const propertyVerification = new PropertyVerification({ assignments: [], reads: [] });
+            const propertyVerification = new Verification({ writes: [], reads: [] });
 
             t.assert.doesNotThrow(() => {
                 propertyVerification.wasReadNTimes(0);
@@ -36,8 +44,8 @@ await suite("PropertyVerification", async () => {
             await test("should not throw if the property was read at least once", t => {
                 t.plan(1);
 
-                const propertyVerification = new PropertyVerification({
-                    assignments: [],
+                const propertyVerification = new Verification({
+                    writes: [],
                     reads: [{ time: 0n, value: 0 }]
                 });
 
@@ -48,7 +56,7 @@ await suite("PropertyVerification", async () => {
             await test("should throw if the property was never read", t => {
                 t.plan(1);
 
-                const propertyVerification = new PropertyVerification({ assignments: [], reads: [] });
+                const propertyVerification = new Verification({ writes: [], reads: [] });
 
                 t.assert.throws(() => {
                     propertyVerification.wasRead();
@@ -59,8 +67,8 @@ await suite("PropertyVerification", async () => {
             await test("should not throw if read count matches verifier", t => {
                 t.plan(1);
 
-                const propertyVerification = new PropertyVerification({
-                    assignments: [],
+                const propertyVerification = new Verification({
+                    writes: [],
                     reads: [{ time: 0n, value: 0 }, { time: 0n, value: 0 }]
                 });
 
@@ -71,8 +79,8 @@ await suite("PropertyVerification", async () => {
             await test("should throw if read count does not match verifier", t => {
                 t.plan(1);
 
-                const propertyVerification = new PropertyVerification({
-                    assignments: [],
+                const propertyVerification = new Verification({
+                    writes: [],
                     reads: [{ time: 0n, value: 0 }, { time: 0n, value: 0 }]
                 });
 
@@ -87,7 +95,7 @@ await suite("PropertyVerification", async () => {
             t.plan(1);
 
             // Given
-            const propertyVerification = new PropertyVerification({ assignments: [], reads: [] });
+            const propertyVerification = new Verification({ writes: [], reads: [] });
 
             // Then
             t.assert.doesNotThrow(() => {
@@ -99,8 +107,8 @@ await suite("PropertyVerification", async () => {
             t.plan(1);
 
             // Given
-            const propertyVerification = new PropertyVerification({
-                assignments: [{ time: 0n, newValue: 1 }],
+            const propertyVerification = new Verification({
+                writes: [{ time: 0n, newValue: 1 }],
                 reads: []
             });
 
@@ -116,7 +124,7 @@ await suite("PropertyVerification", async () => {
             t.plan(1);
 
             // Given
-            const propertyVerification = new PropertyVerification({ assignments: [], reads: [] });
+            const propertyVerification = new Verification({ writes: [], reads: [] });
 
             // Then
             t.assert.doesNotThrow(() => {
@@ -128,8 +136,8 @@ await suite("PropertyVerification", async () => {
             t.plan(1);
 
             // Given
-            const propertyVerification = new PropertyVerification({
-                assignments: [],
+            const propertyVerification = new Verification({
+                writes: [],
                 reads: [{ time: 0n, value: 1 }]
             });
 
@@ -145,8 +153,8 @@ await suite("PropertyVerification", async () => {
             t.plan(1);
 
             // Given
-            const propertyVerification = new PropertyVerification({
-                assignments: [{ time: 0n, newValue: 1 }],
+            const propertyVerification = new Verification({
+                writes: [{ time: 0n, newValue: 1 }],
                 reads: []
             });
 
@@ -160,7 +168,7 @@ await suite("PropertyVerification", async () => {
             t.plan(1);
 
             // Given
-            const propertyVerification = new PropertyVerification({ assignments: [], reads: [] });
+            const propertyVerification = new Verification({ writes: [], reads: [] });
 
             // Then
             t.assert.throws(() => {
@@ -172,7 +180,7 @@ await suite("PropertyVerification", async () => {
             t.plan(1);
 
             // Given
-            const propertyVerification = new PropertyVerification({ assignments: [], reads: [] });
+            const propertyVerification = new Verification({ writes: [], reads: [] });
 
             // Then
             t.assert.doesNotThrow(() => {
@@ -186,8 +194,8 @@ await suite("PropertyVerification", async () => {
             t.plan(1);
 
             // Given
-            const propertyVerification = new PropertyVerification({
-                assignments: [{ time: 0n, newValue: 1 }],
+            const propertyVerification = new Verification({
+                writes: [{ time: 0n, newValue: 1 }],
                 reads: []
             });
 
@@ -201,7 +209,7 @@ await suite("PropertyVerification", async () => {
             t.plan(1);
 
             // Given
-            const propertyVerification = new PropertyVerification({ assignments: [], reads: [] });
+            const propertyVerification = new Verification({ writes: [], reads: [] });
 
             // Then
             t.assert.throws(() => {
@@ -215,8 +223,8 @@ await suite("PropertyVerification", async () => {
             t.plan(1);
 
             // Given
-            const propertyVerification = new PropertyVerification({
-                assignments: [{ time: 0n, newValue: 10 }, { time: 1n, newValue: 20 }],
+            const propertyVerification = new Verification({
+                writes: [{ time: 0n, newValue: 10 }, { time: 1n, newValue: 20 }],
                 reads: []
             });
 
@@ -230,8 +238,8 @@ await suite("PropertyVerification", async () => {
             t.plan(1);
 
             // Given
-            const propertyVerification = new PropertyVerification({
-                assignments: [{ time: 0n, newValue: 10 }],
+            const propertyVerification = new Verification({
+                writes: [{ time: 0n, newValue: 10 }],
                 reads: []
             });
 
@@ -247,8 +255,8 @@ await suite("PropertyVerification", async () => {
             t.plan(1);
 
             // Given
-            const propertyVerification = new PropertyVerification({
-                assignments: [{ time: 0n, newValue: 10 }, { time: 1n, newValue: 20 }],
+            const propertyVerification = new Verification({
+                writes: [{ time: 0n, newValue: 10 }, { time: 1n, newValue: 20 }],
                 reads: []
             });
 
@@ -262,7 +270,7 @@ await suite("PropertyVerification", async () => {
             t.plan(1);
 
             // Given
-            const propertyVerification = new PropertyVerification({ assignments: [], reads: [] });
+            const propertyVerification = new Verification({ writes: [], reads: [] });
 
             // Then
             t.assert.throws(() => {
@@ -276,8 +284,8 @@ await suite("PropertyVerification", async () => {
             t.plan(1);
 
             // Given
-            const propertyVerification = new PropertyVerification({
-                assignments: [{ time: 0n, newValue: 10 }, { time: 1n, newValue: 20 }],
+            const propertyVerification = new Verification({
+                writes: [{ time: 0n, newValue: 10 }, { time: 1n, newValue: 20 }],
                 reads: []
             });
 
@@ -291,7 +299,7 @@ await suite("PropertyVerification", async () => {
             t.plan(1);
 
             // Given
-            const propertyVerification = new PropertyVerification({ assignments: [], reads: [] });
+            const propertyVerification = new Verification({ writes: [], reads: [] });
 
             // Then
             t.assert.throws(() => {
@@ -305,8 +313,8 @@ await suite("PropertyVerification", async () => {
             t.plan(1);
 
             // Given
-            const propertyVerification = new PropertyVerification({
-                assignments: [],
+            const propertyVerification = new Verification({
+                writes: [],
                 reads: [{ time: 0n, value: 10 }, { time: 1n, value: 20 }]
             });
 
@@ -320,7 +328,7 @@ await suite("PropertyVerification", async () => {
             t.plan(1);
 
             // Given
-            const propertyVerification = new PropertyVerification({ assignments: [], reads: [] });
+            const propertyVerification = new Verification({ writes: [], reads: [] });
 
             // Then
             t.assert.throws(() => {
@@ -334,8 +342,8 @@ await suite("PropertyVerification", async () => {
             t.plan(1);
 
             // Given
-            const propertyVerification = new PropertyVerification({
-                assignments: [],
+            const propertyVerification = new Verification({
+                writes: [],
                 reads: [{ time: 0n, value: 10 }, { time: 1n, value: 20 }]
             });
 
@@ -349,7 +357,7 @@ await suite("PropertyVerification", async () => {
             t.plan(1);
 
             // Given
-            const propertyVerification = new PropertyVerification({ assignments: [], reads: [] });
+            const propertyVerification = new Verification({ writes: [], reads: [] });
 
             // Then
             t.assert.throws(() => {
@@ -363,8 +371,8 @@ await suite("PropertyVerification", async () => {
             t.plan(1);
 
             // Given
-            const propertyVerification = new PropertyVerification({
-                assignments: [],
+            const propertyVerification = new Verification({
+                writes: [],
                 reads: [{ time: 0n, value: 10 }, { time: 1n, value: 20 }]
             });
 
@@ -378,8 +386,8 @@ await suite("PropertyVerification", async () => {
             t.plan(1);
 
             // Given
-            const propertyVerification = new PropertyVerification({
-                assignments: [],
+            const propertyVerification = new Verification({
+                writes: [],
                 reads: [{ time: 0n, value: 10 }]
             });
 
