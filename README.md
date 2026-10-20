@@ -2,7 +2,7 @@
 
 ## Description
 
-A mocking/stubbing library for JavaScript, inspired by Mockito. It is evironment-agnostic. The production code at run-time only relies on the JavaScript standard library and tslib. The test code relies on Node.js for running the tests, but the library itself can be used in any JavaScript environment (Node.js, browsers, Deno, etc.).
+A mocking/stubbing library for JavaScript, inspired by Mockito. It is evironment-agnostic. The production code at run-time only relies on the JavaScript standard library. The test code relies on Node.js for running the tests, but the library itself can be used in any JavaScript environment (Node.js, browsers, Deno, etc.).
 
 ## Features
 
@@ -11,6 +11,7 @@ A mocking/stubbing library for JavaScript, inspired by Mockito. It is evironment
 - Verify interactions with mock objects
 - Type-safe API with TypeScript support
 - Lightweight and easy to use
+- No external dependencies
 - Low bundle size (~2.8KB minified + gzipped)
 - Small API surface (only 11 public API symbols)
 
